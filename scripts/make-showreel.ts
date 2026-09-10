@@ -1,6 +1,7 @@
 /**
- * Builds a real showreel video from the seeded project images (Ken Burns pans +
- * cross-dissolves), uploads it to Sanity, and sets it as siteSettings.showreelVideo.
+ * Builds the homepage showreel from a handful of free stock video clips
+ * (Pexels — free for commercial use), stitched with cross-dissolves, then
+ * uploads the result to Sanity and sets siteSettings.showreelVideo.
  *
  * Usage: npm run showreel   (needs SANITY_API_WRITE_TOKEN; ffmpeg from ffmpeg-static)
  */
@@ -36,64 +37,63 @@ const client = createClient({
   useCdn: false,
 });
 
-const CLIP = 3.4; // seconds per image
+const UA =
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36";
+
+const CLIP = 4.2; // seconds shown per source clip
 const XF = 0.8; // cross-dissolve length
-const FPS = 24;
+const FPS = 30;
 const STEP = CLIP - XF;
-const TRANSITIONS = [
-  "fade",
-  "wipeleft",
-  "slideup",
-  "smoothright",
-  "fade",
-  "wipeup",
-  "slidedown",
-  "fade",
+
+// Curated stock clips (Pexels — https://www.pexels.com/license/, free to use).
+const CLIPS = [
+  { id: 3129671, start: 3, note: "abstract network / plexus" },
+  { id: 2278095, start: 8, note: "code editor" },
+  { id: 4990243, start: 1, note: "light-ring motion graphic" },
+  { id: 3130284, start: 5, note: "digital data streams" },
+  { id: 1093662, start: 1, note: "ocean waves at sunset" },
+  { id: 2865146, start: 2, note: "sky / clouds timelapse" },
 ];
 
-async function download(url: string) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`${res.status} ${url}`);
-  return Buffer.from(await res.arrayBuffer());
+async function downloadTo(url: string, dest: string) {
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const res = await fetch(url, {
+        headers: { "User-Agent": UA },
+        redirect: "follow",
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      await writeFile(dest, Buffer.from(await res.arrayBuffer()));
+      return;
+    } catch (err) {
+      if (attempt === 3) throw err;
+      await new Promise((r) => setTimeout(r, attempt * 1000));
+    }
+  }
 }
 
 async function main() {
-  console.log("Collecting project images…");
-  const projects: { title: string; url: string }[] = await client.fetch(
-    `*[_type == "project" && defined(image)]|order(order asc){ title, "url": image.asset->url }`,
-  );
-  if (projects.length < 3) {
-    console.error("Need at least 3 projects with images. Run `npm run seed:dummy` first.");
-    process.exit(1);
-  }
-  const imgs = projects.slice(0, 8);
-  console.log(`  ${imgs.length} images: ${imgs.map((p) => p.title).join(", ")}`);
-
   const dir = await mkdtemp(join(tmpdir(), "showreel-"));
+
+  console.log(`Downloading ${CLIPS.length} stock clips…`);
   const files: string[] = [];
-  for (const [i, p] of imgs.entries()) {
-    const f = join(dir, `${i}.jpg`);
-    await writeFile(f, await download(p.url));
+  for (const c of CLIPS) {
+    const f = join(dir, `${c.id}.mp4`);
+    await downloadTo(`https://www.pexels.com/download/video/${c.id}/`, f);
     files.push(f);
+    console.log(`  ${c.id} — ${c.note}`);
   }
 
-  const total = CLIP + (imgs.length - 1) * STEP;
+  const total = CLIP + (files.length - 1) * STEP;
 
-  // Per-image: fill 16:9, then a slow zoom with a gentle drift.
-  const chains = files.map((_, i) => {
-    const zoomIn = i % 2 === 0;
-    const z = zoomIn
-      ? `min(zoom+0.0009,1.15)`
-      : `if(lte(zoom,1.0),1.15,max(zoom-0.0009,1.0))`;
-    const drift = i % 2 === 0 ? `+sin(on/40)*36` : `-sin(on/40)*36`;
-    return (
-      `[${i}:v]scale=2560:1440:force_original_aspect_ratio=increase,` +
-      `crop=2560:1440,setsar=1,` +
-      `zoompan=z='${z}':x='iw/2-(iw/zoom/2)${drift}':y='ih/2-(ih/zoom/2)':` +
-      `d=${Math.round(CLIP * FPS)}:fps=${FPS}:s=1920x1080[c${i}]`
-    );
-  });
+  // Normalise every clip to the same size / fps / format so xfade can chain them.
+  const norm = files.map(
+    (_, i) =>
+      `[${i}:v]scale=1920:1080:force_original_aspect_ratio=increase,` +
+      `crop=1920:1080,fps=${FPS},setsar=1,format=yuv420p,setpts=PTS-STARTPTS[c${i}]`,
+  );
 
+  const TRANSITIONS = ["fade", "fadeblack", "smoothleft", "fade", "wipeleft", "fade"];
   const xfades: string[] = [];
   let prev = "c0";
   for (let i = 1; i < files.length; i++) {
@@ -106,21 +106,22 @@ async function main() {
   }
 
   const filter = [
-    ...chains,
+    ...norm,
     ...xfades,
-    `[pre]fade=t=in:st=0:d=0.6,fade=t=out:st=${(total - 0.6).toFixed(3)}:d=0.6,` +
-      `format=yuv420p[vout]`,
+    `[pre]fade=t=in:st=0:d=0.6,fade=t=out:st=${(total - 0.6).toFixed(3)}:d=0.6[vout]`,
   ].join(";");
 
   const out = join(dir, "showreel.mp4");
   const args: string[] = [];
-  for (const f of files) args.push("-framerate", String(FPS), "-loop", "1", "-t", String(CLIP), "-i", f);
+  for (const [i, f] of files.entries()) {
+    args.push("-ss", String(CLIPS[i].start), "-t", String(CLIP), "-i", f);
+  }
   args.push(
     "-filter_complex", filter,
     "-map", "[vout]",
     "-c:v", "libx264",
     "-preset", "medium",
-    "-crf", "21",
+    "-crf", "22",
     "-pix_fmt", "yuv420p",
     "-r", String(FPS),
     "-movflags", "+faststart",
@@ -128,8 +129,8 @@ async function main() {
     "-y", out,
   );
 
-  console.log(`Rendering ${total.toFixed(1)}s reel with ffmpeg…`);
-  await run(ffmpegPath as string, args, { maxBuffer: 1 << 26 });
+  console.log(`Rendering ${total.toFixed(1)}s reel…`);
+  await run(ffmpegPath as string, args, { maxBuffer: 1 << 27 });
 
   const mp4 = await readFile(out);
   console.log(`  rendered ${(mp4.length / 1e6).toFixed(1)} MB`);
@@ -149,7 +150,7 @@ async function main() {
     })
     .commit();
 
-  console.log("Done. siteSettings.showreelVideo now points at the new reel.");
+  console.log("Done. siteSettings.showreelVideo updated.");
 }
 
 main().catch((err) => {

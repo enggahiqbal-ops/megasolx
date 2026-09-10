@@ -33,8 +33,8 @@ embedded [Sanity](https://www.sanity.io) Studio.
    `seed:dummy` clears the existing content documents first (image assets are
    kept); `seed` upserts by id.
 
-4. (optional) Build a showreel video from the seeded project images and set it
-   as the homepage showreel:
+4. (optional) Build the homepage showreel — stitches a few free Pexels stock
+   clips into a ~20s reel and sets it as `siteSettings.showreelVideo`:
 
    ```bash
    npm run showreel
