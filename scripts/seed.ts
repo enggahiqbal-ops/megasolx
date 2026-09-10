@@ -43,7 +43,7 @@ const client = createClient({
 });
 
 const ROOT = join(import.meta.dirname, "..");
-const assetCache = new Map<string, Promise<string>>();
+const assetCache = new Map<string, Promise<string | null>>();
 const existingAssets = new Map<string, string>();
 
 async function primeExistingAssets() {
@@ -54,7 +54,7 @@ async function primeExistingAssets() {
   }
 }
 
-function uploadImage(publicPath: string): Promise<string> {
+function uploadImage(publicPath: string): Promise<string | null> {
   const filename = basename(publicPath);
   const cached = assetCache.get(publicPath);
   if (cached) return cached;
@@ -62,7 +62,15 @@ function uploadImage(publicPath: string): Promise<string> {
   const task = (async () => {
     const reused = existingAssets.get(filename);
     if (reused) return reused;
-    const buffer = await readFile(join(ROOT, "public", publicPath.replace(/^\//, "")));
+    let buffer: Buffer;
+    try {
+      buffer = await readFile(
+        join(ROOT, "public", publicPath.replace(/^\//, "")),
+      );
+    } catch {
+      console.warn(`  ! skipping missing asset ${publicPath}`);
+      return null;
+    }
     const asset = await client.assets.upload("image", buffer, { filename });
     existingAssets.set(filename, asset._id);
     return asset._id;
@@ -73,9 +81,11 @@ function uploadImage(publicPath: string): Promise<string> {
 }
 
 async function imageRef(publicPath: string) {
+  const ref = await uploadImage(publicPath);
+  if (!ref) return undefined;
   return {
     _type: "image" as const,
-    asset: { _type: "reference" as const, _ref: await uploadImage(publicPath) },
+    asset: { _type: "reference" as const, _ref: ref },
   };
 }
 
