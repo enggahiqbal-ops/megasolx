@@ -18,7 +18,8 @@ export default function AboutSection({
 
   return (
     <section className="container-wide my-16 md:my-24">
-      <div className="grid gap-8 md:grid-cols-[2fr_3fr] md:gap-12">
+      <div className="grid gap-8 md:grid-cols-[2fr_3fr] md:gap-x-12 md:gap-y-10">
+        {/* Heading — full width */}
         <div className="md:col-span-2">
           <Reveal>
             <h2 className="max-w-[7.5em] text-[clamp(2.5rem,8vw,8.125rem)] font-medium leading-[0.75] text-[var(--color-secondary)]">
@@ -27,7 +28,8 @@ export default function AboutSection({
           </Reveal>
         </div>
 
-        <Reveal className="space-y-6">
+        {/* Left column — copy */}
+        <Reveal className="space-y-6 md:col-start-1 md:row-start-2 md:self-start">
           {aboutCopy.map((paragraph) => (
             <p
               key={paragraph.slice(0, 24)}
@@ -44,16 +46,21 @@ export default function AboutSection({
           </Link>
         </Reveal>
 
-        <Reveal>
-          <Media
-            src={settings?.aboutImage ?? "/images/about-teaser.svg"}
-            alt="Team at work"
-            aspectRatio="4/5"
-            className="rounded-[var(--radius-xl)] md:row-span-2"
-          />
+        {/* Right column — image spanning the copy + stats rows */}
+        <Reveal className="md:col-start-2 md:row-start-2 md:row-span-2">
+          <div className="relative aspect-[4/5] overflow-hidden rounded-[var(--radius-xl)] md:aspect-auto md:h-full md:min-h-[28rem]">
+            <Media
+              src={settings?.aboutImage ?? "/images/about-teaser.svg"}
+              alt="Team at work"
+              fill
+              objectFit="cover"
+              sizes="(max-width: 768px) 100vw, 55vw"
+            />
+          </div>
         </Reveal>
 
-        <div className="md:col-start-1">
+        {/* Left column — stats, directly under the copy */}
+        <div className="md:col-start-1 md:row-start-3 md:self-start">
           <Stats items={stats} />
         </div>
       </div>
