@@ -610,6 +610,7 @@ async function main() {
 
   // Site settings
   const aboutImg = imageRef(await photo("about-studio", "design-studio-team", 1200, 1500));
+  const showreelImg = imageRef(await photo("showreel-poster", "film-set-lights", 1920, 1080));
   const navLink = (label: string, href: string) => ({
     _key: key(),
     _type: "navLink",
@@ -627,6 +628,8 @@ async function main() {
     email: "hello@megasolx.example.com",
     introStatement:
       "We design, build and ship world-class digital products for forward-thinking brands.",
+    showreelPoster: showreelImg,
+    showreelLabel: "Watch showreel",
     aboutHeading: "Great work for great people.",
     aboutCopy: [
       "We put people first, understanding that a well-crafted product significantly impacts the lives of those who use it. By empowering users, we solve unique problems and unlock potential for our clients.",

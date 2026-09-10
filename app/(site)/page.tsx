@@ -27,7 +27,11 @@ export default async function HomePage() {
       <Hero tagline={settings?.tagline} />
 
       <div className="relative">
-        <Showreel />
+        <Showreel
+          poster={settings?.showreelPoster}
+          videoSrc={settings?.showreelVideo}
+          label={settings?.showreelLabel}
+        />
         <div className="relative z-10 -mt-[50vh] bg-[var(--color-purple-bg)]">
           <IntroStatement text={settings?.introStatement ?? ""} />
           <HomepageLogos clients={clients ?? []} />

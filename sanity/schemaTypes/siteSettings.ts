@@ -26,6 +26,7 @@ export const siteSettings = defineType({
   icon: CogIcon,
   groups: [
     { name: "general", title: "General", default: true },
+    { name: "homepage", title: "Homepage" },
     { name: "about", title: "About section" },
     { name: "footer", title: "Footer" },
     { name: "nav", title: "Navigation" },
@@ -43,6 +44,32 @@ export const siteSettings = defineType({
       group: "general",
       description: "Large statement below the showreel on the homepage.",
       validation: (r) => r.required(),
+    }),
+
+    defineField({
+      name: "showreelPoster",
+      title: "Showreel poster image",
+      type: "image",
+      group: "homepage",
+      description:
+        "Shown in the homepage showreel before the video plays (and when reduced motion is on).",
+      options: { hotspot: true },
+      fields: [{ name: "alt", type: "string", title: "Alt text" }],
+    }),
+    defineField({
+      name: "showreelVideo",
+      title: "Showreel video",
+      type: "file",
+      group: "homepage",
+      description: "Optional looping MP4 for the homepage showreel.",
+      options: { accept: "video/*" },
+    }),
+    defineField({
+      name: "showreelLabel",
+      title: "Showreel button label",
+      type: "string",
+      group: "homepage",
+      initialValue: "Watch showreel",
     }),
 
     defineField({ name: "aboutHeading", type: "string", group: "about", validation: (r) => r.required() }),

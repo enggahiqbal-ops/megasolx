@@ -245,6 +245,20 @@ export type SiteSettings = {
   description: string;
   url: string;
   introStatement: string;
+  showreelPoster?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  showreelVideo?: {
+    asset?: SanityFileAssetReference;
+    media?: unknown;
+    _type: "file";
+  };
+  showreelLabel?: string;
   aboutHeading: string;
   aboutCopy?: Array<string>;
   aboutImage?: {
@@ -428,13 +442,16 @@ export type AllSanitySchemaTypes =
 
 // Source: sanity/lib/queries.ts
 // Variable: SETTINGS_QUERY
-// Query: *[_type == "siteSettings"][0]{    name,    tagline,    description,    url,    introStatement,    aboutHeading,    aboutCopy,    "aboutImage": aboutImage.asset->url,    aboutLink,    stats,    "footer": {      "ctaLine1": footerCtaLine1,      "ctaLine2": footerCtaLine2,      "tickerWords": footerTickerWords,      "copyright": footerCopyright    },    email,    locations,    social,    nav[]{ label, href },    workCategories[]{ label, href, slug },    expertiseMenu[]{ heading, links[]{ label, href } }  }
+// Query: *[_type == "siteSettings"][0]{    name,    tagline,    description,    url,    introStatement,    "showreelPoster": showreelPoster.asset->url,    "showreelVideo": showreelVideo.asset->url,    showreelLabel,    aboutHeading,    aboutCopy,    "aboutImage": aboutImage.asset->url,    aboutLink,    stats,    "footer": {      "ctaLine1": footerCtaLine1,      "ctaLine2": footerCtaLine2,      "tickerWords": footerTickerWords,      "copyright": footerCopyright    },    email,    locations,    social,    nav[]{ label, href },    workCategories[]{ label, href, slug },    expertiseMenu[]{ heading, links[]{ label, href } }  }
 export type SETTINGS_QUERY_RESULT = {
   name: string;
   tagline: string;
   description: string;
   url: string;
   introStatement: string;
+  showreelPoster: string | null;
+  showreelVideo: string | null;
+  showreelLabel: string | null;
   aboutHeading: string;
   aboutCopy: Array<string> | null;
   aboutImage: string | null;
@@ -711,7 +728,7 @@ export type SERVICES_QUERY_RESULT = Array<{
 // Query TypeMap
 declare global {
   interface SanityQueries {
-    '\n  *[_type == "siteSettings"][0]{\n    name,\n    tagline,\n    description,\n    url,\n    introStatement,\n    aboutHeading,\n    aboutCopy,\n    "aboutImage": aboutImage.asset->url,\n    aboutLink,\n    stats,\n    "footer": {\n      "ctaLine1": footerCtaLine1,\n      "ctaLine2": footerCtaLine2,\n      "tickerWords": footerTickerWords,\n      "copyright": footerCopyright\n    },\n    email,\n    locations,\n    social,\n    nav[]{ label, href },\n    workCategories[]{ label, href, slug },\n    expertiseMenu[]{ heading, links[]{ label, href } }\n  }\n': SETTINGS_QUERY_RESULT;
+    '\n  *[_type == "siteSettings"][0]{\n    name,\n    tagline,\n    description,\n    url,\n    introStatement,\n    "showreelPoster": showreelPoster.asset->url,\n    "showreelVideo": showreelVideo.asset->url,\n    showreelLabel,\n    aboutHeading,\n    aboutCopy,\n    "aboutImage": aboutImage.asset->url,\n    aboutLink,\n    stats,\n    "footer": {\n      "ctaLine1": footerCtaLine1,\n      "ctaLine2": footerCtaLine2,\n      "tickerWords": footerTickerWords,\n      "copyright": footerCopyright\n    },\n    email,\n    locations,\n    social,\n    nav[]{ label, href },\n    workCategories[]{ label, href, slug },\n    expertiseMenu[]{ heading, links[]{ label, href } }\n  }\n': SETTINGS_QUERY_RESULT;
     '\n  *[_type == "project"]|order(order asc, year desc){ \n  "slug": slug.current,\n  title,\n  category,\n  year,\n  layout,\n  aspectRatio,\n  "image": image.asset->url,\n  "video": video.asset->url,\n  "poster": poster.asset->url,\n  description,\n  tags,\n  featured,\n  textColor\n }\n': PROJECTS_QUERY_RESULT;
     '\n  *[_type == "project" && featured == true]|order(order asc, year desc){ \n  "slug": slug.current,\n  title,\n  category,\n  year,\n  layout,\n  aspectRatio,\n  "image": image.asset->url,\n  "video": video.asset->url,\n  "poster": poster.asset->url,\n  description,\n  tags,\n  featured,\n  textColor\n }\n': FEATURED_PROJECTS_QUERY_RESULT;
     '\n  *[_type == "project" && slug.current == $slug][0]{\n    \n  "slug": slug.current,\n  title,\n  category,\n  year,\n  layout,\n  aspectRatio,\n  "image": image.asset->url,\n  "video": video.asset->url,\n  "poster": poster.asset->url,\n  description,\n  tags,\n  featured,\n  textColor\n,\n    body[]{\n      ...,\n      _type == "image" => { ..., "url": asset->url }\n    }\n  }\n': PROJECT_QUERY_RESULT;
