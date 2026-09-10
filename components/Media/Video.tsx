@@ -5,12 +5,10 @@ import Media from "@/components/Media/Media";
 
 type VideoProps = {
   src: string;
-  mobileSrc?: string;
   poster?: string;
   className?: string;
   aspectRatio?: string;
   autoplay?: boolean;
-  muted?: boolean;
   loop?: boolean;
   controls?: boolean;
 };
@@ -31,37 +29,34 @@ function useReducedMotion() {
 
 export default function Video({
   src,
-  mobileSrc,
   poster = "/images/showreel-poster.svg",
   className = "",
   aspectRatio = "1452/890",
   autoplay = true,
-  muted = true,
   loop = true,
   controls = false,
 }: VideoProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const ref = useRef<HTMLVideoElement>(null);
   const prefersReducedMotion = useReducedMotion();
-  const [playbackFailed, setPlaybackFailed] = useState(false);
-  const usePoster = prefersReducedMotion || playbackFailed;
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    if (usePoster) return;
-    const video = videoRef.current;
+    const video = ref.current;
     if (!video) return;
-
-    const isMobile = window.matchMedia("(max-width: 991px)").matches;
-    video.src = isMobile && mobileSrc ? mobileSrc : src;
+    // React can be flaky about the muted *property* (needed for autoplay).
+    video.muted = true;
     if (autoplay) {
-      video.play().catch(() => setPlaybackFailed(true));
+      void video.play().catch(() => {
+        /* onError handles genuine load failures; autoplay rejection is fine */
+      });
     }
-  }, [autoplay, mobileSrc, src, usePoster]);
+  }, [src, autoplay]);
 
-  if (usePoster) {
+  if (prefersReducedMotion || failed) {
     return (
       <Media
         src={poster}
-        alt="Video poster"
+        alt="Showreel"
         aspectRatio={aspectRatio}
         className={className}
         priority
@@ -72,12 +67,16 @@ export default function Video({
   return (
     <div className={`relative overflow-hidden ${className}`} style={{ aspectRatio }}>
       <video
-        ref={videoRef}
+        ref={ref}
+        src={src}
         poster={poster}
-        muted={muted}
+        autoPlay={autoplay}
         loop={loop}
+        muted
         playsInline
         controls={controls}
+        preload="auto"
+        onError={() => setFailed(true)}
         className="absolute inset-0 h-full w-full object-cover"
       />
     </div>
