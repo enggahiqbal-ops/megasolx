@@ -33,7 +33,14 @@ embedded [Sanity](https://www.sanity.io) Studio.
    `seed:dummy` clears the existing content documents first (image assets are
    kept); `seed` upserts by id.
 
-4. Run the dev server:
+4. (optional) Build a showreel video from the seeded project images and set it
+   as the homepage showreel:
+
+   ```bash
+   npm run showreel
+   ```
+
+5. Run the dev server:
 
    ```bash
    npm run dev
