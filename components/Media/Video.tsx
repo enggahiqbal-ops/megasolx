@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Media from "@/components/Media/Media";
 
 type VideoProps = {
@@ -15,9 +15,18 @@ type VideoProps = {
   controls?: boolean;
 };
 
-function getInitialPosterMode() {
-  if (typeof window === "undefined") return false;
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
+
+function useReducedMotion() {
+  return useSyncExternalStore(
+    (onChange) => {
+      const mq = window.matchMedia(REDUCED_MOTION);
+      mq.addEventListener("change", onChange);
+      return () => mq.removeEventListener("change", onChange);
+    },
+    () => window.matchMedia(REDUCED_MOTION).matches,
+    () => false,
+  );
 }
 
 export default function Video({
@@ -32,19 +41,19 @@ export default function Video({
   controls = false,
 }: VideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [usePoster, setUsePoster] = useState(getInitialPosterMode);
+  const prefersReducedMotion = useReducedMotion();
+  const [playbackFailed, setPlaybackFailed] = useState(false);
+  const usePoster = prefersReducedMotion || playbackFailed;
 
   useEffect(() => {
     if (usePoster) return;
-
-    const isMobile = window.matchMedia("(max-width: 991px)").matches;
     const video = videoRef.current;
     if (!video) return;
 
-    const source = isMobile && mobileSrc ? mobileSrc : src;
-    video.src = source;
+    const isMobile = window.matchMedia("(max-width: 991px)").matches;
+    video.src = isMobile && mobileSrc ? mobileSrc : src;
     if (autoplay) {
-      video.play().catch(() => setUsePoster(true));
+      video.play().catch(() => setPlaybackFailed(true));
     }
   }, [autoplay, mobileSrc, src, usePoster]);
 
