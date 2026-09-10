@@ -19,11 +19,19 @@ embedded [Sanity](https://www.sanity.io) Studio.
    | `SANITY_API_READ_TOKEN`  | Viewer | Draft-mode preview + live content     |
    | `SANITY_API_WRITE_TOKEN` | Editor | One-off seeding (`npm run seed` only) |
 
-3. Seed the dataset with the sample content that used to live in `data/*.ts`:
+3. Seed the dataset. `seed:dummy` generates a full set of placeholder content
+   for every page (8 projects with case studies, 8 articles, all 20 expertise
+   entries, clients, services, site settings). `seed` just imports the smaller
+   original samples from `data/*.ts`.
 
    ```bash
+   npm run seed:dummy   # recommended for development
+   # or
    npm run seed
    ```
+
+   `seed:dummy` clears the existing content documents first (image assets are
+   kept); `seed` upserts by id.
 
 4. Run the dev server:
 

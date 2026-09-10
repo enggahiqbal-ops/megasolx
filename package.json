@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "eslint",
     "typegen": "sanity schema extract --enforce-required-fields --force && sanity typegen generate",
-    "seed": "node --env-file=.env.local scripts/seed.ts"
+    "seed": "node --env-file=.env.local scripts/seed.ts",
+    "seed:dummy": "node --env-file=.env.local scripts/seed-dummy.ts"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
