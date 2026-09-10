@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import type { Project } from "@/data/projects";
+import type { Project } from "@/sanity/lib/types";
 import Media from "@/components/Media/Media";
 
 type ProjectCardProps = {
@@ -24,7 +24,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           style={{ width: innerWidth }}
         >
           <Media
-            src={project.image}
+            src={project.image ?? ""}
             alt={project.title}
             aspectRatio={project.aspectRatio}
             className="rounded-[20px] border border-transparent"

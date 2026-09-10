@@ -3,10 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { siteConfig } from "@/data/site";
-import { expertiseNav } from "@/data/expertise";
+import type { NavLink } from "@/sanity/lib/types";
 
-export default function Navigation() {
+type NavigationProps = {
+  nav: NavLink[];
+  expertiseMenu: { heading: string; links: NavLink[] | null }[];
+};
+
+export default function Navigation({ nav, expertiseMenu }: NavigationProps) {
   const pathname = usePathname();
   const [submenuOpen, setSubmenuOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
@@ -21,7 +25,7 @@ export default function Navigation() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  const navLinks = siteConfig.nav;
+  const navLinks = nav;
 
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-[100]">
@@ -83,13 +87,13 @@ export default function Navigation() {
             {submenuOpen && (
               <div className="absolute bottom-full left-1/2 mb-3 w-[min(90vw,56rem)] -translate-x-1/2 rounded-[1.375rem] bg-white p-6 shadow-xl md:bottom-auto md:top-full md:mb-0 md:mt-3">
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                  {expertiseNav.groups.map((group) => (
+                  {expertiseMenu.map((group) => (
                     <div key={group.heading}>
                       <p className="mb-3 text-xs font-medium uppercase tracking-wide text-[var(--color-muted)]">
                         {group.heading}
                       </p>
                       <ul className="space-y-2">
-                        {group.links.map((link) => (
+                        {(group.links ?? []).map((link) => (
                           <li key={link.href}>
                             <Link
                               href={link.href}

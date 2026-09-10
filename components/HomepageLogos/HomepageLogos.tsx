@@ -4,11 +4,11 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { clients } from "@/data/clients";
+import type { ClientLogo } from "@/sanity/lib/types";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function HomepageLogos() {
+export default function HomepageLogos({ clients }: { clients: ClientLogo[] }) {
   const listRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
@@ -56,17 +56,19 @@ export default function HomepageLogos() {
         ref={listRef}
         className="flex flex-wrap items-center justify-center gap-x-10 gap-y-10 md:gap-x-14 lg:gap-x-20"
       >
-        {clients.map((client) => (
-          <li key={client.id} data-logo className="opacity-0">
-            <Image
-              src={client.logo}
-              alt={client.name}
-              width={client.width}
-              height={client.height}
-              className="h-[22px] w-auto brightness-0 invert opacity-70 transition-opacity duration-300 hover:opacity-100 md:h-[44px]"
-            />
-          </li>
-        ))}
+        {clients.map((client) =>
+          client.logo ? (
+            <li key={client.id} data-logo className="opacity-0">
+              <Image
+                src={client.logo}
+                alt={client.name}
+                width={client.width}
+                height={client.height}
+                className="h-[22px] w-auto brightness-0 invert opacity-70 transition-opacity duration-300 hover:opacity-100 md:h-[44px]"
+              />
+            </li>
+          ) : null,
+        )}
       </ul>
     </section>
   );

@@ -2,10 +2,13 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { siteConfig } from "@/data/site";
 import TextReveal from "@/components/Reveal/TextReveal";
 
-export default function Hero() {
+export default function Hero({
+  tagline = "Extraordinary Digital Experiences",
+}: {
+  tagline?: string;
+}) {
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -26,8 +29,8 @@ export default function Hero() {
     >
       <div>
         <TextReveal
-          text={siteConfig.tagline}
-          ariaLabel={siteConfig.tagline}
+          text={tagline}
+          ariaLabel={tagline}
           className="max-w-[29.925rem] text-[clamp(3.125rem,6.51vw,4.156rem)] font-medium leading-[0.92] text-[var(--color-secondary)] md:max-w-[91.4375rem] md:pb-8 md:pt-8 md:text-[clamp(8.125rem,8.598vw,10.8063rem)]"
         />
         <a

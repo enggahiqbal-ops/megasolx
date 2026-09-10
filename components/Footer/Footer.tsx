@@ -2,11 +2,19 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { siteConfig } from "@/data/site";
+import type { SiteSettings } from "@/sanity/lib/types";
 
-export default function Footer() {
+const FALLBACK_WORDS = ["epic", "innovative", "extraordinary", "world-class"];
+
+export default function Footer({ settings }: { settings: SiteSettings | null }) {
   const [wordIndex, setWordIndex] = useState(0);
-  const words = siteConfig.footer.tickerWords;
+  const words =
+    settings?.footer?.tickerWords && settings.footer.tickerWords.length > 0
+      ? settings.footer.tickerWords
+      : FALLBACK_WORDS;
+  const email = settings?.email ?? "hello@example.com";
+  const locations = settings?.locations ?? [];
+  const nav = settings?.nav ?? [];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -24,10 +32,10 @@ export default function Footer() {
             className="group cursor-pointer border-none bg-transparent p-0 text-left"
           >
             <span className="block text-[clamp(2.5rem,8vw,4.375rem)] font-medium leading-none transition-colors group-hover:text-[var(--color-primary)] md:text-[clamp(4.375rem,4.63vw,5.819rem)]">
-              {siteConfig.footer.ctaLine1}
+              {settings?.footer?.ctaLine1 ?? "Let's make"}
             </span>
             <span className="mt-1 block text-[clamp(2.5rem,8vw,4.375rem)] font-medium leading-none md:text-[clamp(4.375rem,4.63vw,5.819rem)]">
-              {siteConfig.footer.ctaLine2}{" "}
+              {settings?.footer?.ctaLine2 ?? "something"}{" "}
               <span className="inline-block min-w-[6ch] text-[var(--color-primary)] transition-all duration-300">
                 {words[wordIndex]}
               </span>
@@ -39,15 +47,15 @@ export default function Footer() {
           <div>
             <p className="mb-4 text-sm text-[var(--color-muted)]">Contact</p>
             <a
-              href={`mailto:${siteConfig.email}`}
+              href={`mailto:${email}`}
               className="group inline-flex items-center gap-2 text-lg text-[var(--color-secondary)] transition hover:text-[var(--color-primary-text)]"
             >
-              {siteConfig.email}
+              {email}
               <span className="transition-transform group-hover:translate-x-1">→</span>
             </a>
           </div>
 
-          {siteConfig.locations.map((loc) => (
+          {locations.map((loc) => (
             <div key={loc.city}>
               <p className="mb-1 font-medium">{loc.city}</p>
               <p className="text-sm text-[var(--color-muted)]">{loc.country}</p>
@@ -62,7 +70,7 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-wrap gap-6 border-t border-black/10 pt-8 md:col-span-2">
-          {siteConfig.nav.map((link) => (
+          {nav.map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -74,7 +82,8 @@ export default function Footer() {
         </div>
 
         <p className="text-sm text-[var(--color-muted)] md:col-span-2">
-          {siteConfig.footer.copyright}
+          {settings?.footer?.copyright ??
+            `© ${new Date().getFullYear()} Megasolx. All rights reserved.`}
         </p>
       </div>
     </footer>
