@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { articles } from "@/data/articles";
 import Media from "@/components/Media/Media";
 import Reveal from "@/components/Reveal/Reveal";
+import type { Article } from "@/sanity/lib/types";
 
-export default function NewsFeed() {
+export default function NewsFeed({ articles }: { articles: Article[] }) {
+  if (articles.length === 0) return null;
+
   return (
     <section className="container-wide my-16 overflow-hidden md:my-24">
       <Reveal>
@@ -22,13 +24,13 @@ export default function NewsFeed() {
               className="group block w-[clamp(18.75rem,19.84vw,24.9375rem)]"
             >
               <Media
-                src={article.image}
+                src={article.image ?? ""}
                 alt=""
                 aspectRatio="4/3"
                 className="mb-4 rounded-[var(--radius-sm)] transition-transform duration-300 group-hover:scale-[1.02]"
               />
               <div className="mb-2 flex flex-wrap gap-2 text-xs text-[var(--color-muted)]">
-                {article.category.map((cat) => (
+                {(article.category ?? []).map((cat) => (
                   <span key={cat}>{cat}</span>
                 ))}
                 <span>{article.readTime}</span>

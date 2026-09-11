@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+This is a [Next.js](https://nextjs.org) 16 project. Content is managed with an
+embedded [Sanity](https://www.sanity.io) Studio.
 
 ## Getting Started
 
-First, run the development server:
+1. Install dependencies and copy the env file:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+   ```bash
+   npm install
+   cp .env.example .env.local
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Create two API tokens at
+   [manage.sanity.io → API → Tokens](https://www.sanity.io/manage/project/cxr8q1di/api/tokens)
+   and paste them into `.env.local`:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+   | Variable                 | Role   | Used for                              |
+   | ------------------------ | ------ | ------------------------------------- |
+   | `SANITY_API_READ_TOKEN`  | Viewer | Draft-mode preview + live content     |
+   | `SANITY_API_WRITE_TOKEN` | Editor | One-off seeding (`npm run seed` only) |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. Seed the dataset. `seed:dummy` generates a full set of placeholder content
+   for every page (8 projects with case studies, 8 articles, all 20 expertise
+   entries, clients, services, site settings). `seed` just imports the smaller
+   original samples from `data/*.ts`.
 
-## Learn More
+   ```bash
+   npm run seed:dummy   # recommended for development
+   # or
+   npm run seed
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+   `seed:dummy` clears the existing content documents first (image assets are
+   kept); `seed` upserts by id.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. (optional) Build the homepage showreel — stitches a few free Pexels stock
+   clips into a ~20s reel and sets it as `siteSettings.showreelVideo`:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   ```bash
+   npm run showreel
+   ```
 
-## Deploy on Vercel
+5. Run the dev server:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```bash
+   npm run dev
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Site: [http://localhost:3000](http://localhost:3000)
+- Studio: [http://localhost:3000/studio](http://localhost:3000/studio)
+
+## How the CMS integration works
+
+- **Schemas** live in [`sanity/schemaTypes`](sanity/schemaTypes). The Studio is
+  mounted at `/studio` via [`app/studio/[[...tool]]`](app/studio) and configured
+  in [`sanity.config.ts`](sanity.config.ts).
+- **Queries** are in [`sanity/lib/queries.ts`](sanity/lib/queries.ts). Pages fetch
+  with `sanityFetch` from [`sanity/lib/live.ts`](sanity/lib/live.ts), which wires
+  the site to Sanity's Live Content API — published pages update without a
+  redeploy, and `<SanityLive />` in [`app/(site)/layout.tsx`](<app/(site)/layout.tsx>)
+  keeps them in sync.
+- **Types** are generated from the schema + queries into `sanity.types.ts` by
+  `npm run typegen`. This runs automatically on `prebuild`; re-run it by hand
+  after changing a schema or query.
+- **Preview**: the Studio's Presentation tool loads the site in an iframe and
+  turns on Next.js Draft Mode through
+  [`app/api/draft-mode/enable`](<app/api/draft-mode/enable/route.ts>), so editors
+  see unpublished drafts live.
+
+The marketing site lives under the `app/(site)` route group so the Studio route
+renders without the site chrome (nav, footer, smooth-scroll, cursor).
+
+## Deployment
+
+Set the same env vars in your host. `NEXT_PUBLIC_SANITY_STUDIO_URL` should point
+at `https://<your-domain>/studio`, and add that origin to
+**CORS origins** in the Sanity dashboard.

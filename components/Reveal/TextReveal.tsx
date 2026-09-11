@@ -32,14 +32,14 @@ export default function TextReveal({
 
     gsap.fromTo(
       words,
-      { opacity: 0, y: "80%" },
+      { opacity: 0, y: 16 },
       {
         opacity: 1,
         y: 0,
-        duration: 0.8,
-        stagger: 0.08,
+        duration: 0.75,
+        stagger: 0.07,
         ease: "power3.out",
-        delay: 0.2,
+        delay: 0.15,
       },
     );
   }, [text]);
@@ -52,9 +52,9 @@ export default function TextReveal({
         <span
           key={`${word}-${i}`}
           data-word
-          className="mr-[0.25em] inline-block overflow-hidden align-top last:mr-0"
+          className="mr-[0.25em] inline-block last:mr-0"
         >
-          <span className="inline-block">{word}</span>
+          {word}
         </span>
       ))}
     </h1>

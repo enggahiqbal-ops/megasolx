@@ -1,58 +1,62 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Media from "@/components/Media/Media";
 
 type VideoProps = {
   src: string;
-  mobileSrc?: string;
   poster?: string;
   className?: string;
   aspectRatio?: string;
   autoplay?: boolean;
-  muted?: boolean;
   loop?: boolean;
   controls?: boolean;
 };
 
-function getInitialPosterMode() {
-  if (typeof window === "undefined") return false;
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
+
+function useReducedMotion() {
+  return useSyncExternalStore(
+    (onChange) => {
+      const mq = window.matchMedia(REDUCED_MOTION);
+      mq.addEventListener("change", onChange);
+      return () => mq.removeEventListener("change", onChange);
+    },
+    () => window.matchMedia(REDUCED_MOTION).matches,
+    () => false,
+  );
 }
 
 export default function Video({
   src,
-  mobileSrc,
   poster = "/images/showreel-poster.svg",
   className = "",
   aspectRatio = "1452/890",
   autoplay = true,
-  muted = true,
   loop = true,
   controls = false,
 }: VideoProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [usePoster, setUsePoster] = useState(getInitialPosterMode);
+  const ref = useRef<HTMLVideoElement>(null);
+  const prefersReducedMotion = useReducedMotion();
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    if (usePoster) return;
-
-    const isMobile = window.matchMedia("(max-width: 991px)").matches;
-    const video = videoRef.current;
+    const video = ref.current;
     if (!video) return;
-
-    const source = isMobile && mobileSrc ? mobileSrc : src;
-    video.src = source;
+    // React can be flaky about the muted *property* (needed for autoplay).
+    video.muted = true;
     if (autoplay) {
-      video.play().catch(() => setUsePoster(true));
+      void video.play().catch(() => {
+        /* onError handles genuine load failures; autoplay rejection is fine */
+      });
     }
-  }, [autoplay, mobileSrc, src, usePoster]);
+  }, [src, autoplay]);
 
-  if (usePoster) {
+  if (prefersReducedMotion || failed) {
     return (
       <Media
         src={poster}
-        alt="Video poster"
+        alt="Showreel"
         aspectRatio={aspectRatio}
         className={className}
         priority
@@ -63,12 +67,16 @@ export default function Video({
   return (
     <div className={`relative overflow-hidden ${className}`} style={{ aspectRatio }}>
       <video
-        ref={videoRef}
+        ref={ref}
+        src={src}
         poster={poster}
-        muted={muted}
+        autoPlay={autoplay}
         loop={loop}
+        muted
         playsInline
         controls={controls}
+        preload="auto"
+        onError={() => setFailed(true)}
         className="absolute inset-0 h-full w-full object-cover"
       />
     </div>

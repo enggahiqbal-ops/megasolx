@@ -1,4 +1,4 @@
-import type { Project } from "@/data/projects";
+import type { Project } from "@/sanity/lib/types";
 import ProjectCard from "@/components/ProjectCard/ProjectCard";
 import Reveal from "@/components/Reveal/Reveal";
 
