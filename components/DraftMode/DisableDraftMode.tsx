@@ -17,7 +17,7 @@ export default function DisableDraftMode() {
   return (
     <a
       href="/api/draft-mode/disable"
-      className="fixed bottom-4 left-4 z-[300] rounded-full bg-[var(--color-secondary)] px-4 py-2 text-xs font-medium text-white shadow-lg"
+      className="fixed bottom-4 left-4 z-[300] rounded-full bg-black px-4 py-2 text-xs font-medium text-white shadow-lg"
     >
       Exit preview
     </a>

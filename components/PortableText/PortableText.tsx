@@ -12,22 +12,20 @@ import { urlForImage } from "@/sanity/lib/image";
 const components: PortableTextComponents = {
   block: {
     normal: ({ children }) => (
-      <p className="mb-6 text-lg leading-relaxed text-[var(--color-secondary)]">
-        {children}
-      </p>
+      <p className="mb-4 leading-relaxed last:mb-0">{children}</p>
     ),
     h2: ({ children }) => (
-      <h2 className="mb-4 mt-12 text-3xl font-medium text-[var(--color-secondary)]">
+      <h2 className="mb-4 mt-10 font-display-condensed text-2xl uppercase text-white">
         {children}
       </h2>
     ),
     h3: ({ children }) => (
-      <h3 className="mb-3 mt-8 text-xl font-medium text-[var(--color-secondary)]">
+      <h3 className="mb-3 mt-8 font-display-condensed text-xl uppercase text-white">
         {children}
       </h3>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="my-8 border-l-2 border-[var(--color-primary)] pl-6 text-xl text-[var(--color-muted)]">
+      <blockquote className="my-6 border-l-2 border-white/30 pl-6 italic text-white/80">
         {children}
       </blockquote>
     ),
@@ -36,7 +34,7 @@ const components: PortableTextComponents = {
     link: ({ children, value }) => (
       <a
         href={value?.href}
-        className="underline underline-offset-4 hover:text-[var(--color-primary-text)]"
+        className="underline underline-offset-4 hover:text-white"
         {...(value?.href?.startsWith("http")
           ? { target: "_blank", rel: "noreferrer" }
           : {})}
@@ -57,10 +55,11 @@ const components: PortableTextComponents = {
             alt={value.alt ?? ""}
             width={1600}
             height={900}
-            className="h-auto w-full rounded-[var(--radius-sm)]"
+            className="h-auto w-full"
           />
           {value.alt ? (
-            <figcaption className="mt-2 text-sm text-[var(--color-muted)]">
+            <figcaption className="mt-2 text-sm text-white/50">
+
               {value.alt}
             </figcaption>
           ) : null}

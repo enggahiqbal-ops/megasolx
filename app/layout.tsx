@@ -1,14 +1,7 @@
 import type { Metadata } from "next";
-import { DM_Sans } from "next/font/google";
 import "@/styles/globals.css";
 import { sanityFetch } from "@/sanity/lib/live";
 import { SETTINGS_QUERY } from "@/sanity/lib/queries";
-
-const dmSans = DM_Sans({
-  subsets: ["latin"],
-  variable: "--font-display",
-  weight: ["400", "500", "600", "700"],
-});
 
 export async function generateMetadata(): Promise<Metadata> {
   const { data: settings } = await sanityFetch({
@@ -16,19 +9,22 @@ export async function generateMetadata(): Promise<Metadata> {
     stega: false,
   });
 
-  const name = settings?.name ?? "MEGASOLX";
-  const tagline = settings?.tagline ?? "Extraordinary Digital Experiences";
+  const name = settings?.name ?? "Montra Studio";
+  const tagline = settings?.tagline ?? "Film & Video Production";
   const description =
     settings?.description ??
-    "We design, build and ship world-class digital products for forward-thinking brands.";
-  const url = settings?.url ?? "https://example.com";
+    "Montra Studio is a film and video production agency crafting cinematic stories for brands.";
+  const url = settings?.url ?? "https://www.montrastudio.com";
 
   return {
-    title: { default: `${name} | ${tagline}`, template: `%s | ${name}` },
+    title: {
+      default: `${name} | ${tagline}`,
+      template: `%s | ${name}`,
+    },
     description,
     metadataBase: new URL(url),
     openGraph: {
-      title: name,
+      title: `${name} – ${tagline}`,
       description,
       url,
       siteName: name,
@@ -41,8 +37,24 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${dmSans.variable} h-full`}>
-      <body className="min-h-full antialiased">{children}</body>
+    <html lang="en">
+      <body>
+        {/*
+          Montra theme CSS, in the same load order as the original template's
+          _document.js. These are plain <link> tags (not CSS imports) because
+          the files are served from /public — React 19 hoists rel="stylesheet"
+          links to <head> and dedupes them regardless of where they're rendered.
+        */}
+        <link rel="stylesheet" href="/assets/montra/css/vendor/bootstrap.min.css" />
+        <link rel="stylesheet" href="/assets/montra/css/vendor/fontawesome.css" />
+        <link rel="stylesheet" href="/assets/montra/css/vendor/solid.css" />
+        <link rel="stylesheet" href="/assets/montra/css/vendor/regular.css" />
+        <link rel="stylesheet" href="/assets/montra/css/vendor/brands.css" />
+        <link rel="stylesheet" href="/assets/montra/css/vendor/swiper-bundle.min.css" />
+        <link rel="stylesheet" href="/assets/montra/css/main.css" />
+        <link rel="stylesheet" href="/assets/montra/css/responsive.css" />
+        {children}
+      </body>
     </html>
   );
 }

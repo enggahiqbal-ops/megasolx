@@ -1,11 +1,8 @@
 import { draftMode } from "next/headers";
 import { VisualEditing } from "next-sanity/visual-editing";
 
-import Navigation from "@/components/Navigation/Navigation";
+import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
-import FooterReveal from "@/components/FooterReveal/FooterReveal";
-import SmoothScroll from "@/components/SmoothScroll/SmoothScroll";
-import Cursor from "@/components/Cursor/Cursor";
 import DisableDraftMode from "@/components/DraftMode/DisableDraftMode";
 import { sanityFetch, SanityLive } from "@/sanity/lib/live";
 import { SETTINGS_QUERY } from "@/sanity/lib/queries";
@@ -22,15 +19,10 @@ export default async function SiteLayout({
   });
 
   return (
-    <SmoothScroll>
-      <Navigation
-        nav={settings?.nav ?? []}
-        expertiseMenu={settings?.expertiseMenu ?? []}
-      />
-      <FooterReveal footer={<Footer settings={settings} />}>
-        {children}
-      </FooterReveal>
-      <Cursor />
+    <>
+      <Header settings={settings} />
+      {children}
+      <Footer settings={settings} />
       <SanityLive />
       {isDraft && (
         <>
@@ -38,6 +30,6 @@ export default async function SiteLayout({
           <DisableDraftMode />
         </>
       )}
-    </SmoothScroll>
+    </>
   );
 }

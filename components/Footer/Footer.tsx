@@ -1,159 +1,101 @@
-"use client";
-
-import { Fragment, useEffect, useState } from "react";
 import Link from "next/link";
+
 import type { SiteSettings } from "@/sanity/lib/types";
+import NewsletterForm from "@/components/Footer/NewsletterForm";
 
-const FALLBACK_WORDS = ["epic", "innovative", "extraordinary", "world-class"];
+type Props = {
+  settings: SiteSettings | null;
+};
 
-function GlobeIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.3"
-      aria-hidden
-    >
-      <circle cx="8" cy="8" r="6.4" />
-      <path d="M1.6 8h12.8M8 1.6c1.8 1.7 2.8 4 2.8 6.4S9.8 12.7 8 14.4C6.2 12.7 5.2 10.4 5.2 8S6.2 3.3 8 1.6Z" />
-    </svg>
-  );
-}
+const defaultNav = [
+  { label: "Home", href: "/" },
+  { label: "About Us", href: "/about" },
+  { label: "Services", href: "/services" },
+  { label: "Portfolio", href: "/project" },
+  { label: "Blog", href: "/blog" },
+  { label: "Contact", href: "/contact" },
+];
 
-export default function Footer({ settings }: { settings: SiteSettings | null }) {
-  const [wordIndex, setWordIndex] = useState(0);
-
-  const words =
-    settings?.footer?.tickerWords && settings.footer.tickerWords.length > 0
-      ? settings.footer.tickerWords
-      : FALLBACK_WORDS;
-  const name = settings?.name ?? "MEGASOLX";
-  const email = settings?.email ?? "hello@example.com";
-  const locations = settings?.locations ?? [];
-  const ctaLine1 = settings?.footer?.ctaLine1 ?? "Let's make";
-  const ctaLine2 = settings?.footer?.ctaLine2 ?? "something";
-  const copyright =
-    settings?.footer?.copyright ?? `© ${new Date().getFullYear()}`;
-
+export default function Footer({ settings }: Props) {
+  const nav = settings?.nav?.length ? settings.nav : defaultNav;
+  const heading = settings?.footerHeading ?? "Montra - Film & Video Production";
+  const address = settings?.contact?.address ?? "123 Montra Studio Bulevard., Los Angeles, CA 90210";
+  const phone = settings?.contact?.phone ?? "+1 (800) 234-5678";
+  const newsletterHeading =
+    settings?.newsletter?.heading ?? "Subscribe to our newsletter for the latest updates";
   const social = settings?.social;
-  const socialLinks = [
-    social?.x && { label: "Twitter X", href: social.x },
-    social?.instagram && { label: "Instagram", href: social.instagram },
-    social?.linkedin && { label: "LinkedIn", href: social.linkedin },
-  ].filter((s): s is { label: string; href: string } => Boolean(s));
-
-  useEffect(() => {
-    const id = setInterval(
-      () => setWordIndex((i) => (i + 1) % words.length),
-      2200,
-    );
-    return () => clearInterval(id);
-  }, [words.length]);
+  const copyright = settings?.footerCopyright ?? "© 2025 Montra Studio. All rights reserved.";
 
   return (
-    <footer className="relative overflow-hidden bg-white text-[var(--color-secondary)]">
-      {/* decorative brand shapes */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -bottom-24 right-[-6rem] hidden h-[26rem] w-[26rem] opacity-70 md:block"
-      >
-        <span className="absolute inset-0 rounded-full border-[3rem] border-[var(--color-primary)]/25" />
-        <span className="absolute inset-10 rounded-full border-[3rem] border-[#7360e4]/20" />
-        <span className="absolute inset-24 rounded-full border-[2.5rem] border-[#59c3f0]/20" />
-      </div>
-
-      <div className="container-wide relative py-16 md:py-20 lg:py-24">
-        {/* CTA */}
-        <div className="text-[clamp(2.25rem,8vw,4.375rem)] font-medium leading-[1.04] md:text-[clamp(3.5rem,4.63vw,5.819rem)]">
-          <span className="flex items-center gap-3 whitespace-nowrap md:gap-5">
-            {ctaLine1}
-            <span className="text-[var(--color-primary)]">→</span>
-          </span>
-          <span className="mt-1 block">
-            {ctaLine2}{" "}
-            <span className="inline-block min-w-[6ch] text-[var(--color-primary)] transition-all duration-300">
-              {words[wordIndex]}
-            </span>
-          </span>
-        </div>
-
-        {/* Contact + locations */}
-        <div className="mt-14 grid gap-10 sm:grid-cols-2 md:mt-20 md:grid-cols-4 lg:gap-14">
-          <div>
-            <p className="flex items-center gap-2 font-medium">
-              <GlobeIcon />
-              We work globally
-            </p>
-            <Link
-              href="/contact"
-              className="group mt-4 inline-flex items-center gap-1.5 text-sm transition-colors hover:text-[var(--color-primary-text)]"
-            >
-              Submit a brief
-              <span className="transition-transform group-hover:translate-x-1">→</span>
-            </Link>
-            <a
-              href={`mailto:${email}`}
-              className="mt-2 block text-sm transition-colors hover:text-[var(--color-primary-text)]"
-            >
-              {email}
-            </a>
-          </div>
-
-          {locations.map((loc) => (
-            <div key={`${loc.country}-${loc.city}`}>
-              <p className="font-medium">{loc.country}</p>
-              <p className="mt-2 text-sm text-[var(--color-muted)]">{loc.city}</p>
-              {loc.email ? (
-                <a
-                  href={`mailto:${loc.email}`}
-                  className="mt-1 block text-sm text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary-text)]"
-                >
-                  {loc.email}
-                </a>
-              ) : null}
+    <footer>
+      <div className="section-footer">
+        <div className="hero-container">
+          <div className="footer-container">
+            <div className="row row-cols-lg-3 row-cols-md-2 row-cols-1 grid-spacer-3">
+              <div className="col col-lg-3 col-md-6">
+                <div className="d-flex flex-column gspace-2">
+                  <h3>{heading}</h3>
+                  <div className="d-flex flex-column gspace-1">
+                    <h5>Our Office</h5>
+                    <div className="footer-info-container">
+                      <span className="footer-info">{address}</span>
+                    </div>
+                    <div className="footer-info-container">
+                      <h5>Contact Us</h5>
+                      <span className="footer-info">{phone}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col col-lg-3 col-md-6">
+                <div className="d-flex flex-column gspace-3">
+                  <h4>Navigation</h4>
+                  <ul className="chevron-circle-list">
+                    {nav.map((link) => (
+                      <li key={link.href}>
+                        <Link href={link.href}>{link.label}</Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <div className="col col-lg-6 col-md-12">
+                <div className="footer-newsletter-container">
+                  <h5 className="container-title">{newsletterHeading}</h5>
+                  <NewsletterForm />
+                  <div className="d-flex flex-row gspace-1 align-items-center w-100 justify-content-between flex-wrap">
+                    <h5>Social Media</h5>
+                    <div className="social-footer-container">
+                      <a href={social?.instagram || "https://www.instagram.com/"} className="footer-icon">
+                        <i className="fa-brands fa-instagram" />
+                      </a>
+                      <a href={social?.facebook || "https://www.facebook.com/"} className="footer-icon">
+                        <i className="fa-brands fa-facebook" />
+                      </a>
+                      <a href={social?.x || "https://www.x.com/"} className="footer-icon">
+                        <i className="fa-brands fa-x-twitter" />
+                      </a>
+                      <a href={social?.youtube || "https://www.youtube.com/"} className="footer-icon">
+                        <i className="fa-brands fa-youtube" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-          ))}
-        </div>
-
-        {/* Bottom bar */}
-        <div className="mt-14 flex flex-col gap-4 border-t border-black/10 pt-6 text-sm md:mt-20 md:flex-row md:items-center md:justify-between">
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[var(--color-muted)]">
-            <span className="font-medium tracking-wide text-[var(--color-secondary)]">
-              {name}
-            </span>
-            <span>{copyright}</span>
-            <Link
-              href="/privacy"
-              className="transition-colors hover:text-[var(--color-primary-text)]"
-            >
-              Privacy
-            </Link>
-          </div>
-
-          {socialLinks.length > 0 && (
-            <div className="flex flex-wrap items-center gap-3 text-[var(--color-muted)]">
-              {socialLinks.map((s, i) => (
-                <Fragment key={s.label}>
-                  {i > 0 && (
-                    <span className="text-[var(--color-primary)]" aria-hidden>
-                      ✳
-                    </span>
-                  )}
-                  <a
-                    href={s.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="transition-colors hover:text-[var(--color-secondary)]"
-                  >
-                    {s.label}
-                  </a>
-                </Fragment>
-              ))}
+            <div className="footer-title-container">
+              <span className="footer-title">{settings?.name ?? "Montra Studio"}</span>
             </div>
-          )}
+            <div className="footer-copyright-container">
+              <Link href="/privacy-policy" className="legallink">
+                Privacy Policy
+              </Link>
+              <span className="copyright">{copyright}</span>
+              <a href="#" className="legallink">
+                Terms &amp; Conditions
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </footer>

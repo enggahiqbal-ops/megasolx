@@ -52,14 +52,109 @@ export type BlockContent = Array<
     }
 >;
 
-export type Service = {
+export type AuthorReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "author";
+};
+
+export type Article = {
   _id: string;
-  _type: "service";
+  _type: "article";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
   title: string;
-  items: Array<string>;
+  slug: Slug;
+  excerpt: string;
+  category?: Array<string>;
+  tags?: Array<string>;
+  publishedAt: string;
+  date: string;
+  readTime?: string;
+  author?: AuthorReference;
+  image: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  body?: BlockContent;
+};
+
+export type SanityImageCrop = {
+  _type: "sanity.imageCrop";
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+};
+
+export type SanityImageHotspot = {
+  _type: "sanity.imageHotspot";
+  x: number;
+  y: number;
+  height: number;
+  width: number;
+};
+
+export type Author = {
+  _id: string;
+  _type: "author";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name: string;
+  avatar?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+};
+
+export type Slug = {
+  _type: "slug";
+  current: string;
+  source?: string;
+};
+
+export type PricingPlan = {
+  _id: string;
+  _type: "pricingPlan";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name: string;
+  price: string;
+  billingLabel?: string;
+  description?: string;
+  features: Array<string>;
+  highlighted?: boolean;
+  ctaLabel?: string;
+  order?: number;
+};
+
+export type Testimonial = {
+  _id: string;
+  _type: "testimonial";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  quote: string;
+  name: string;
+  role?: string;
+  avatar?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
   order?: number;
 };
 
@@ -83,115 +178,71 @@ export type Client = {
   order?: number;
 };
 
-export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
-  top: number;
-  bottom: number;
-  left: number;
-  right: number;
-};
-
-export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
-  x: number;
-  y: number;
-  height: number;
-  width: number;
-};
-
-export type Slug = {
-  _type: "slug";
-  current: string;
-  source?: string;
-};
-
-export type ExpertiseReference = {
-  _ref: string;
-  _type: "reference";
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: "expertise";
-};
-
-export type Expertise = {
+export type TeamMember = {
   _id: string;
-  _type: "expertise";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title: string;
-  slug: Slug;
-  subtitle: string;
-  description: string;
-  features?: Array<{
-    title: string;
-    description: string;
-    _key: string;
-  }>;
-  image: {
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: "image";
-  };
-  related?: ExpertiseReference;
-  order?: number;
-};
-
-export type AuthorReference = {
-  _ref: string;
-  _type: "reference";
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: "author";
-};
-
-export type Article = {
-  _id: string;
-  _type: "article";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title: string;
-  slug: Slug;
-  excerpt: string;
-  category?: Array<string>;
-  publishedAt: string;
-  date: string;
-  readTime?: string;
-  author?: AuthorReference;
-  image: {
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: "image";
-  };
-  body?: BlockContent;
-};
-
-export type Author = {
-  _id: string;
-  _type: "author";
+  _type: "teamMember";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
   name: string;
-  avatar?: {
+  role: string;
+  photo: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     _type: "image";
   };
+  socials?: {
+    x?: string;
+    linkedin?: string;
+    instagram?: string;
+    dribbble?: string;
+  };
+  order?: number;
 };
 
-export type SanityFileAssetReference = {
-  _ref: string;
-  _type: "reference";
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
+export type Service = {
+  _id: string;
+  _type: "service";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  slug: Slug;
+  shortDescription: string;
+  tags?: Array<string>;
+  heroVideoId?: string;
+  intro?: BlockContent;
+  whatsIncluded?: Array<{
+    title: string;
+    description: string;
+    _key: string;
+  }>;
+  whyChooseUs?: {
+    body?: string;
+    bullets?: Array<string>;
+    image?: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+    };
+  };
+  idealFor?: {
+    items?: Array<string>;
+    image?: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+    };
+  };
+  order?: number;
 };
 
 export type Project = {
@@ -202,11 +253,7 @@ export type Project = {
   _rev: string;
   title: string;
   slug: Slug;
-  category: string;
-  year: string;
-  layout: "landscape" | "portrait";
-  aspectRatio: string;
-  image: {
+  coverImage: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
@@ -214,24 +261,106 @@ export type Project = {
     alt?: string;
     _type: "image";
   };
-  video?: {
-    asset?: SanityFileAssetReference;
-    media?: unknown;
-    _type: "file";
-  };
-  poster?: {
+  tags?: Array<string>;
+  workBlurb: string;
+  heroVideoId?: string;
+  client?: string;
+  category?: string;
+  location?: string;
+  duration?: string;
+  deliveryFormat?: string;
+  roleItems?: Array<string>;
+  about?: BlockContent;
+  behindTheScenes?: BlockContent;
+  creativeDirection?: BlockContent;
+  results?: Array<{
+    value: string;
+    label: string;
+    _key: string;
+  }>;
+  gallery?: Array<{
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
+    alt?: string;
     _type: "image";
-  };
-  description: string;
-  tags?: Array<string>;
-  textColor?: "white" | "black";
+    _key: string;
+  }>;
   featured?: boolean;
   order?: number;
-  body?: BlockContent;
+};
+
+export type PricingPage = {
+  _id: string;
+  _type: "pricingPage";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  heading: string;
+  body?: string;
+  faqs?: Array<{
+    question: string;
+    answer: string;
+    _key: string;
+  }>;
+};
+
+export type ContactPage = {
+  _id: string;
+  _type: "contactPage";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  heading: string;
+  body?: string;
+  faqs?: Array<{
+    question: string;
+    answer: string;
+    _key: string;
+  }>;
+};
+
+export type AboutPage = {
+  _id: string;
+  _type: "aboutPage";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  tagline: string;
+  heroStatement: string;
+  secondaryStatement?: string;
+  statsHeading?: string;
+  stats?: Array<{
+    value: string;
+    label: string;
+    _key: string;
+  }>;
+};
+
+export type HomePage = {
+  _id: string;
+  _type: "homePage";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  hero?: {
+    headingWordPart1: string;
+    headingWordPart2: string;
+    headingLine2: string;
+    intro?: string;
+    showreelVideoId?: string;
+  };
+  coreServices?: {
+    heading?: string;
+    intro?: string;
+    items?: Array<{
+      title: string;
+      description: string;
+      highlighted?: boolean;
+      _key: string;
+    }>;
+  };
 };
 
 export type SiteSettings = {
@@ -244,8 +373,7 @@ export type SiteSettings = {
   tagline: string;
   description: string;
   url: string;
-  introStatement: string;
-  showreelPoster?: {
+  logo?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
@@ -253,68 +381,57 @@ export type SiteSettings = {
     alt?: string;
     _type: "image";
   };
-  showreelVideo?: {
-    asset?: SanityFileAssetReference;
-    media?: unknown;
-    _type: "file";
-  };
-  showreelLabel?: string;
-  aboutHeading: string;
-  aboutCopy?: Array<string>;
-  aboutImage?: {
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
-  aboutLink?: {
-    label?: string;
-    href?: string;
-  };
-  stats?: Array<{
-    value: string;
-    label: string;
-    _key: string;
-  }>;
-  footerCtaLine1?: string;
-  footerCtaLine2?: string;
-  footerTickerWords?: Array<string>;
+  ctaLabel?: string;
+  ctaHref?: string;
   footerCopyright?: string;
+  footerHeading?: string;
+  newsletter?: {
+    heading?: string;
+    body?: string;
+  };
   nav?: Array<{
     label: string;
     href: string;
     _type: "navLink";
     _key: string;
   }>;
-  workCategories?: Array<{
-    label: string;
-    href: string;
-    slug: string;
-    _key: string;
-  }>;
-  expertiseMenu?: Array<{
-    heading: string;
-    links?: Array<{
-      label: string;
-      href: string;
-      _type: "navLink";
-      _key: string;
-    }>;
-    _type: "expertiseGroup";
-    _key: string;
-  }>;
   email: string;
-  locations?: Array<{
-    city: string;
-    country: string;
-    email?: string;
-    _key: string;
-  }>;
+  contact?: {
+    phone?: string;
+    businessHours?: string;
+    address?: string;
+    mapEmbedUrl?: string;
+  };
   social?: {
     instagram?: string;
-    linkedin?: string;
+    facebook?: string;
     x?: string;
+    youtube?: string;
+  };
+  ctaBanner?: {
+    heading?: string;
+    body?: string;
+    buttonLabel?: string;
+    buttonHref?: string;
+  };
+  trustSection?: {
+    heading?: string;
+    points?: Array<{
+      number?: string;
+      title: string;
+      description: string;
+      _key: string;
+    }>;
+  };
+  trustStat?: {
+    value?: string;
+    label?: string;
+  };
+  highlightCta?: {
+    heading?: string;
+    videoId?: string;
+    buttonLabel?: string;
+    buttonHref?: string;
   };
 };
 
@@ -418,18 +535,22 @@ export type Geopoint = {
 export type AllSanitySchemaTypes =
   | SanityImageAssetReference
   | BlockContent
-  | Service
-  | Client
-  | SanityImageCrop
-  | SanityImageHotspot
-  | Slug
-  | ExpertiseReference
-  | Expertise
   | AuthorReference
   | Article
+  | SanityImageCrop
+  | SanityImageHotspot
   | Author
-  | SanityFileAssetReference
+  | Slug
+  | PricingPlan
+  | Testimonial
+  | Client
+  | TeamMember
+  | Service
   | Project
+  | PricingPage
+  | ContactPage
+  | AboutPage
+  | HomePage
   | SiteSettings
   | SanityImagePaletteSwatch
   | SanityImagePalette
@@ -442,120 +563,225 @@ export type AllSanitySchemaTypes =
 
 // Source: sanity/lib/queries.ts
 // Variable: SETTINGS_QUERY
-// Query: *[_type == "siteSettings"][0]{    name,    tagline,    description,    url,    introStatement,    "showreelPoster": showreelPoster.asset->url,    "showreelVideo": showreelVideo.asset->url,    showreelLabel,    aboutHeading,    aboutCopy,    "aboutImage": aboutImage.asset->url,    aboutLink,    stats,    "footer": {      "ctaLine1": footerCtaLine1,      "ctaLine2": footerCtaLine2,      "tickerWords": footerTickerWords,      "copyright": footerCopyright    },    email,    locations,    social,    nav[]{ label, href },    workCategories[]{ label, href, slug },    expertiseMenu[]{ heading, links[]{ label, href } }  }
+// Query: *[_type == "siteSettings"][0]{    name,    tagline,    description,    url,    "logo": logo.asset->url,    ctaLabel,    ctaHref,    footerCopyright,    footerHeading,    newsletter,    nav[]{ label, href },    email,    contact,    social,    ctaBanner,    trustSection,    trustStat,    highlightCta  }
 export type SETTINGS_QUERY_RESULT = {
   name: string;
   tagline: string;
   description: string;
   url: string;
-  introStatement: string;
-  showreelPoster: string | null;
-  showreelVideo: string | null;
-  showreelLabel: string | null;
-  aboutHeading: string;
-  aboutCopy: Array<string> | null;
-  aboutImage: string | null;
-  aboutLink: {
-    label?: string;
-    href?: string;
-  } | null;
-  stats: Array<{
-    value: string;
-    label: string;
-    _key: string;
-  }> | null;
-  footer: {
-    ctaLine1: string | null;
-    ctaLine2: string | null;
-    tickerWords: Array<string> | null;
-    copyright: string | null;
-  };
-  email: string;
-  locations: Array<{
-    city: string;
-    country: string;
-    email?: string;
-    _key: string;
-  }> | null;
-  social: {
-    instagram?: string;
-    linkedin?: string;
-    x?: string;
+  logo: string | null;
+  ctaLabel: string | null;
+  ctaHref: string | null;
+  footerCopyright: string | null;
+  footerHeading: string | null;
+  newsletter: {
+    heading?: string;
+    body?: string;
   } | null;
   nav: Array<{
     label: string;
     href: string;
   }> | null;
-  workCategories: Array<{
+  email: string;
+  contact: {
+    phone?: string;
+    businessHours?: string;
+    address?: string;
+    mapEmbedUrl?: string;
+  } | null;
+  social: {
+    instagram?: string;
+    facebook?: string;
+    x?: string;
+    youtube?: string;
+  } | null;
+  ctaBanner: {
+    heading?: string;
+    body?: string;
+    buttonLabel?: string;
+    buttonHref?: string;
+  } | null;
+  trustSection: {
+    heading?: string;
+    points?: Array<{
+      number?: string;
+      title: string;
+      description: string;
+      _key: string;
+    }>;
+  } | null;
+  trustStat: {
+    value?: string;
+    label?: string;
+  } | null;
+  highlightCta: {
+    heading?: string;
+    videoId?: string;
+    buttonLabel?: string;
+    buttonHref?: string;
+  } | null;
+} | null;
+
+// Source: sanity/lib/queries.ts
+// Variable: HOME_PAGE_QUERY
+// Query: *[_type == "homePage"][0]{    hero,    coreServices  }
+export type HOME_PAGE_QUERY_RESULT = {
+  hero: {
+    headingWordPart1: string;
+    headingWordPart2: string;
+    headingLine2: string;
+    intro?: string;
+    showreelVideoId?: string;
+  } | null;
+  coreServices: {
+    heading?: string;
+    intro?: string;
+    items?: Array<{
+      title: string;
+      description: string;
+      highlighted?: boolean;
+      _key: string;
+    }>;
+  } | null;
+} | null;
+
+// Source: sanity/lib/queries.ts
+// Variable: ABOUT_PAGE_QUERY
+// Query: *[_type == "aboutPage"][0]{    tagline,    heroStatement,    secondaryStatement,    statsHeading,    stats  }
+export type ABOUT_PAGE_QUERY_RESULT = {
+  tagline: string;
+  heroStatement: string;
+  secondaryStatement: string | null;
+  statsHeading: string | null;
+  stats: Array<{
+    value: string;
     label: string;
-    href: string;
-    slug: string;
-  }> | null;
-  expertiseMenu: Array<{
-    heading: string;
-    links: Array<{
-      label: string;
-      href: string;
-    }> | null;
+    _key: string;
   }> | null;
 } | null;
 
 // Source: sanity/lib/queries.ts
+// Variable: CONTACT_PAGE_QUERY
+// Query: *[_type == "contactPage"][0]{    heading,    body,    faqs  }
+export type CONTACT_PAGE_QUERY_RESULT = {
+  heading: string;
+  body: string | null;
+  faqs: Array<{
+    question: string;
+    answer: string;
+    _key: string;
+  }> | null;
+} | null;
+
+// Source: sanity/lib/queries.ts
+// Variable: PRICING_PAGE_QUERY
+// Query: *[_type == "pricingPage"][0]{    heading,    body,    faqs  }
+export type PRICING_PAGE_QUERY_RESULT = {
+  heading: string;
+  body: string | null;
+  faqs: Array<{
+    question: string;
+    answer: string;
+    _key: string;
+  }> | null;
+} | null;
+
+// Source: sanity/lib/queries.ts
+// Variable: TEAM_QUERY
+// Query: *[_type == "teamMember"]|order(order asc){    name,    role,    "photo": photo.asset->url,    socials  }
+export type TEAM_QUERY_RESULT = Array<{
+  name: string;
+  role: string;
+  photo: string | null;
+  socials: {
+    x?: string;
+    linkedin?: string;
+    instagram?: string;
+    dribbble?: string;
+  } | null;
+}>;
+
+// Source: sanity/lib/queries.ts
+// Variable: CLIENTS_QUERY
+// Query: *[_type == "client"]|order(order asc){    "id": slug.current,    name,    "logo": logo.asset->url,    width,    height  }
+export type CLIENTS_QUERY_RESULT = Array<{
+  id: string;
+  name: string;
+  logo: string | null;
+  width: number;
+  height: number;
+}>;
+
+// Source: sanity/lib/queries.ts
+// Variable: TESTIMONIALS_QUERY
+// Query: *[_type == "testimonial"]|order(order asc){    quote,    name,    role,    "avatar": avatar.asset->url  }
+export type TESTIMONIALS_QUERY_RESULT = Array<{
+  quote: string;
+  name: string;
+  role: string | null;
+  avatar: string | null;
+}>;
+
+// Source: sanity/lib/queries.ts
+// Variable: PRICING_PLANS_QUERY
+// Query: *[_type == "pricingPlan"]|order(order asc){    name,    price,    billingLabel,    description,    features,    highlighted,    ctaLabel  }
+export type PRICING_PLANS_QUERY_RESULT = Array<{
+  name: string;
+  price: string;
+  billingLabel: string | null;
+  description: string | null;
+  features: Array<string>;
+  highlighted: boolean | null;
+  ctaLabel: string | null;
+}>;
+
+// Source: sanity/lib/queries.ts
 // Variable: PROJECTS_QUERY
-// Query: *[_type == "project"]|order(order asc, year desc){   "slug": slug.current,  title,  category,  year,  layout,  aspectRatio,  "image": image.asset->url,  "video": video.asset->url,  "poster": poster.asset->url,  description,  tags,  featured,  textColor }
+// Query: *[_type == "project"]|order(order asc){   "slug": slug.current,  title,  tags,  "coverImage": coverImage.asset->url,  workBlurb,  heroVideoId,  featured,  order }
 export type PROJECTS_QUERY_RESULT = Array<{
   slug: string;
   title: string;
-  category: string;
-  year: string;
-  layout: "landscape" | "portrait";
-  aspectRatio: string;
-  image: string | null;
-  video: string | null;
-  poster: string | null;
-  description: string;
   tags: Array<string> | null;
+  coverImage: string | null;
+  workBlurb: string;
+  heroVideoId: string | null;
   featured: boolean | null;
-  textColor: "black" | "white" | null;
+  order: number | null;
 }>;
 
 // Source: sanity/lib/queries.ts
 // Variable: FEATURED_PROJECTS_QUERY
-// Query: *[_type == "project" && featured == true]|order(order asc, year desc){   "slug": slug.current,  title,  category,  year,  layout,  aspectRatio,  "image": image.asset->url,  "video": video.asset->url,  "poster": poster.asset->url,  description,  tags,  featured,  textColor }
+// Query: *[_type == "project" && featured == true]|order(order asc){   "slug": slug.current,  title,  tags,  "coverImage": coverImage.asset->url,  workBlurb,  heroVideoId,  featured,  order }
 export type FEATURED_PROJECTS_QUERY_RESULT = Array<{
   slug: string;
   title: string;
-  category: string;
-  year: string;
-  layout: "landscape" | "portrait";
-  aspectRatio: string;
-  image: string | null;
-  video: string | null;
-  poster: string | null;
-  description: string;
   tags: Array<string> | null;
+  coverImage: string | null;
+  workBlurb: string;
+  heroVideoId: string | null;
   featured: true;
-  textColor: "black" | "white" | null;
+  order: number | null;
 }>;
 
 // Source: sanity/lib/queries.ts
 // Variable: PROJECT_QUERY
-// Query: *[_type == "project" && slug.current == $slug][0]{      "slug": slug.current,  title,  category,  year,  layout,  aspectRatio,  "image": image.asset->url,  "video": video.asset->url,  "poster": poster.asset->url,  description,  tags,  featured,  textColor,    body[]{      ...,      _type == "image" => { ..., "url": asset->url }    }  }
+// Query: *[_type == "project" && slug.current == $slug][0]{      "slug": slug.current,  title,  tags,  "coverImage": coverImage.asset->url,  workBlurb,  heroVideoId,  featured,  order,    client,    category,    location,    duration,    deliveryFormat,    roleItems,    about[]{ ..., _type == "image" => { ..., "url": asset->url } },    behindTheScenes[]{ ..., _type == "image" => { ..., "url": asset->url } },    creativeDirection[]{ ..., _type == "image" => { ..., "url": asset->url } },    results,    gallery[]{ ..., "url": asset->url }  }
 export type PROJECT_QUERY_RESULT = {
   slug: string;
   title: string;
-  category: string;
-  year: string;
-  layout: "landscape" | "portrait";
-  aspectRatio: string;
-  image: string | null;
-  video: string | null;
-  poster: string | null;
-  description: string;
   tags: Array<string> | null;
+  coverImage: string | null;
+  workBlurb: string;
+  heroVideoId: string | null;
   featured: boolean | null;
-  textColor: "black" | "white" | null;
-  body: Array<
+  order: number | null;
+  client: string | null;
+  category: string | null;
+  location: string | null;
+  duration: string | null;
+  deliveryFormat: string | null;
+  roleItems: Array<string> | null;
+  about: Array<
     | {
         children?: Array<{
           marks?: Array<string>;
@@ -585,6 +811,81 @@ export type PROJECT_QUERY_RESULT = {
         url: string | null;
       }
   > | null;
+  behindTheScenes: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h2" | "h3" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }
+    | {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt?: string;
+        _type: "image";
+        _key: string;
+        url: string | null;
+      }
+  > | null;
+  creativeDirection: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h2" | "h3" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }
+    | {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt?: string;
+        _type: "image";
+        _key: string;
+        url: string | null;
+      }
+  > | null;
+  results: Array<{
+    value: string;
+    label: string;
+    _key: string;
+  }> | null;
+  gallery: Array<{
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+    _key: string;
+    url: string | null;
+  }> | null;
 } | null;
 
 // Source: sanity/lib/queries.ts
@@ -595,13 +896,89 @@ export type PROJECT_SLUGS_QUERY_RESULT = Array<{
 }>;
 
 // Source: sanity/lib/queries.ts
+// Variable: SERVICES_QUERY
+// Query: *[_type == "service"]|order(order asc){   "slug": slug.current,  title,  shortDescription,  tags,  heroVideoId,  order }
+export type SERVICES_QUERY_RESULT = Array<{
+  slug: string;
+  title: string;
+  shortDescription: string;
+  tags: Array<string> | null;
+  heroVideoId: string | null;
+  order: number | null;
+}>;
+
+// Source: sanity/lib/queries.ts
+// Variable: SERVICE_QUERY
+// Query: *[_type == "service" && slug.current == $slug][0]{      "slug": slug.current,  title,  shortDescription,  tags,  heroVideoId,  order,    intro[]{ ..., _type == "image" => { ..., "url": asset->url } },    whatsIncluded,    whyChooseUs{ body, bullets, "image": image.asset->url },    idealFor{ items, "image": image.asset->url }  }
+export type SERVICE_QUERY_RESULT = {
+  slug: string;
+  title: string;
+  shortDescription: string;
+  tags: Array<string> | null;
+  heroVideoId: string | null;
+  order: number | null;
+  intro: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h2" | "h3" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }
+    | {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt?: string;
+        _type: "image";
+        _key: string;
+        url: string | null;
+      }
+  > | null;
+  whatsIncluded: Array<{
+    title: string;
+    description: string;
+    _key: string;
+  }> | null;
+  whyChooseUs: {
+    body: string | null;
+    bullets: Array<string> | null;
+    image: string | null;
+  } | null;
+  idealFor: {
+    items: Array<string> | null;
+    image: string | null;
+  } | null;
+} | null;
+
+// Source: sanity/lib/queries.ts
+// Variable: SERVICE_SLUGS_QUERY
+// Query: *[_type == "service" && defined(slug.current)]{ "slug": slug.current }
+export type SERVICE_SLUGS_QUERY_RESULT = Array<{
+  slug: string;
+}>;
+
+// Source: sanity/lib/queries.ts
 // Variable: ARTICLES_QUERY
-// Query: *[_type == "article"]|order(publishedAt desc){   "slug": slug.current,  title,  excerpt,  category,  date,  readTime,  publishedAt,  "author": author->{ name, "avatar": avatar.asset->url },  "image": image.asset->url }
+// Query: *[_type == "article"]|order(publishedAt desc){   "slug": slug.current,  title,  excerpt,  category,  tags,  date,  readTime,  publishedAt,  "author": author->{ name, "avatar": avatar.asset->url },  "image": image.asset->url }
 export type ARTICLES_QUERY_RESULT = Array<{
   slug: string;
   title: string;
   excerpt: string;
   category: Array<string> | null;
+  tags: Array<string> | null;
   date: string;
   readTime: string | null;
   publishedAt: string;
@@ -614,12 +991,13 @@ export type ARTICLES_QUERY_RESULT = Array<{
 
 // Source: sanity/lib/queries.ts
 // Variable: ARTICLE_QUERY
-// Query: *[_type == "article" && slug.current == $slug][0]{      "slug": slug.current,  title,  excerpt,  category,  date,  readTime,  publishedAt,  "author": author->{ name, "avatar": avatar.asset->url },  "image": image.asset->url,    body[]{      ...,      _type == "image" => { ..., "url": asset->url }    }  }
+// Query: *[_type == "article" && slug.current == $slug][0]{      "slug": slug.current,  title,  excerpt,  category,  tags,  date,  readTime,  publishedAt,  "author": author->{ name, "avatar": avatar.asset->url },  "image": image.asset->url,    body[]{      ...,      _type == "image" => { ..., "url": asset->url }    }  }
 export type ARTICLE_QUERY_RESULT = {
   slug: string;
   title: string;
   excerpt: string;
   category: Array<string> | null;
+  tags: Array<string> | null;
   date: string;
   readTime: string | null;
   publishedAt: string;
@@ -667,80 +1045,28 @@ export type ARTICLE_SLUGS_QUERY_RESULT = Array<{
   slug: string;
 }>;
 
-// Source: sanity/lib/queries.ts
-// Variable: EXPERTISE_LIST_QUERY
-// Query: *[_type == "expertise"]|order(order asc){   "slug": slug.current,  title,  subtitle,  description,  features[]{ title, description },  "image": image.asset->url,  "relatedSlug": related->slug.current }
-export type EXPERTISE_LIST_QUERY_RESULT = Array<{
-  slug: string;
-  title: string;
-  subtitle: string;
-  description: string;
-  features: Array<{
-    title: string;
-    description: string;
-  }> | null;
-  image: string | null;
-  relatedSlug: string | null;
-}>;
-
-// Source: sanity/lib/queries.ts
-// Variable: EXPERTISE_QUERY
-// Query: *[_type == "expertise" && slug.current == $slug][0]{   "slug": slug.current,  title,  subtitle,  description,  features[]{ title, description },  "image": image.asset->url,  "relatedSlug": related->slug.current }
-export type EXPERTISE_QUERY_RESULT = {
-  slug: string;
-  title: string;
-  subtitle: string;
-  description: string;
-  features: Array<{
-    title: string;
-    description: string;
-  }> | null;
-  image: string | null;
-  relatedSlug: string | null;
-} | null;
-
-// Source: sanity/lib/queries.ts
-// Variable: EXPERTISE_SLUGS_QUERY
-// Query: *[_type == "expertise" && defined(slug.current)]{ "slug": slug.current }
-export type EXPERTISE_SLUGS_QUERY_RESULT = Array<{
-  slug: string;
-}>;
-
-// Source: sanity/lib/queries.ts
-// Variable: CLIENTS_QUERY
-// Query: *[_type == "client"]|order(order asc){    "id": slug.current,    name,    "logo": logo.asset->url,    width,    height  }
-export type CLIENTS_QUERY_RESULT = Array<{
-  id: string;
-  name: string;
-  logo: string | null;
-  width: number;
-  height: number;
-}>;
-
-// Source: sanity/lib/queries.ts
-// Variable: SERVICES_QUERY
-// Query: *[_type == "service"]|order(order asc){ title, items }
-export type SERVICES_QUERY_RESULT = Array<{
-  title: string;
-  items: Array<string>;
-}>;
-
 // Query TypeMap
 declare global {
   interface SanityQueries {
-    '\n  *[_type == "siteSettings"][0]{\n    name,\n    tagline,\n    description,\n    url,\n    introStatement,\n    "showreelPoster": showreelPoster.asset->url,\n    "showreelVideo": showreelVideo.asset->url,\n    showreelLabel,\n    aboutHeading,\n    aboutCopy,\n    "aboutImage": aboutImage.asset->url,\n    aboutLink,\n    stats,\n    "footer": {\n      "ctaLine1": footerCtaLine1,\n      "ctaLine2": footerCtaLine2,\n      "tickerWords": footerTickerWords,\n      "copyright": footerCopyright\n    },\n    email,\n    locations,\n    social,\n    nav[]{ label, href },\n    workCategories[]{ label, href, slug },\n    expertiseMenu[]{ heading, links[]{ label, href } }\n  }\n': SETTINGS_QUERY_RESULT;
-    '\n  *[_type == "project"]|order(order asc, year desc){ \n  "slug": slug.current,\n  title,\n  category,\n  year,\n  layout,\n  aspectRatio,\n  "image": image.asset->url,\n  "video": video.asset->url,\n  "poster": poster.asset->url,\n  description,\n  tags,\n  featured,\n  textColor\n }\n': PROJECTS_QUERY_RESULT;
-    '\n  *[_type == "project" && featured == true]|order(order asc, year desc){ \n  "slug": slug.current,\n  title,\n  category,\n  year,\n  layout,\n  aspectRatio,\n  "image": image.asset->url,\n  "video": video.asset->url,\n  "poster": poster.asset->url,\n  description,\n  tags,\n  featured,\n  textColor\n }\n': FEATURED_PROJECTS_QUERY_RESULT;
-    '\n  *[_type == "project" && slug.current == $slug][0]{\n    \n  "slug": slug.current,\n  title,\n  category,\n  year,\n  layout,\n  aspectRatio,\n  "image": image.asset->url,\n  "video": video.asset->url,\n  "poster": poster.asset->url,\n  description,\n  tags,\n  featured,\n  textColor\n,\n    body[]{\n      ...,\n      _type == "image" => { ..., "url": asset->url }\n    }\n  }\n': PROJECT_QUERY_RESULT;
-    '\n  *[_type == "project" && defined(slug.current)]{ "slug": slug.current }\n': PROJECT_SLUGS_QUERY_RESULT;
-    '\n  *[_type == "article"]|order(publishedAt desc){ \n  "slug": slug.current,\n  title,\n  excerpt,\n  category,\n  date,\n  readTime,\n  publishedAt,\n  "author": author->{ name, "avatar": avatar.asset->url },\n  "image": image.asset->url\n }\n': ARTICLES_QUERY_RESULT;
-    '\n  *[_type == "article" && slug.current == $slug][0]{\n    \n  "slug": slug.current,\n  title,\n  excerpt,\n  category,\n  date,\n  readTime,\n  publishedAt,\n  "author": author->{ name, "avatar": avatar.asset->url },\n  "image": image.asset->url\n,\n    body[]{\n      ...,\n      _type == "image" => { ..., "url": asset->url }\n    }\n  }\n': ARTICLE_QUERY_RESULT;
-    '\n  *[_type == "article" && defined(slug.current)]{ "slug": slug.current }\n': ARTICLE_SLUGS_QUERY_RESULT;
-    '\n  *[_type == "expertise"]|order(order asc){ \n  "slug": slug.current,\n  title,\n  subtitle,\n  description,\n  features[]{ title, description },\n  "image": image.asset->url,\n  "relatedSlug": related->slug.current\n }\n': EXPERTISE_LIST_QUERY_RESULT;
-    '\n  *[_type == "expertise" && slug.current == $slug][0]{ \n  "slug": slug.current,\n  title,\n  subtitle,\n  description,\n  features[]{ title, description },\n  "image": image.asset->url,\n  "relatedSlug": related->slug.current\n }\n': EXPERTISE_QUERY_RESULT;
-    '\n  *[_type == "expertise" && defined(slug.current)]{ "slug": slug.current }\n': EXPERTISE_SLUGS_QUERY_RESULT;
+    '\n  *[_type == "siteSettings"][0]{\n    name,\n    tagline,\n    description,\n    url,\n    "logo": logo.asset->url,\n    ctaLabel,\n    ctaHref,\n    footerCopyright,\n    footerHeading,\n    newsletter,\n    nav[]{ label, href },\n    email,\n    contact,\n    social,\n    ctaBanner,\n    trustSection,\n    trustStat,\n    highlightCta\n  }\n': SETTINGS_QUERY_RESULT;
+    '\n  *[_type == "homePage"][0]{\n    hero,\n    coreServices\n  }\n': HOME_PAGE_QUERY_RESULT;
+    '\n  *[_type == "aboutPage"][0]{\n    tagline,\n    heroStatement,\n    secondaryStatement,\n    statsHeading,\n    stats\n  }\n': ABOUT_PAGE_QUERY_RESULT;
+    '\n  *[_type == "contactPage"][0]{\n    heading,\n    body,\n    faqs\n  }\n': CONTACT_PAGE_QUERY_RESULT;
+    '\n  *[_type == "pricingPage"][0]{\n    heading,\n    body,\n    faqs\n  }\n': PRICING_PAGE_QUERY_RESULT;
+    '\n  *[_type == "teamMember"]|order(order asc){\n    name,\n    role,\n    "photo": photo.asset->url,\n    socials\n  }\n': TEAM_QUERY_RESULT;
     '\n  *[_type == "client"]|order(order asc){\n    "id": slug.current,\n    name,\n    "logo": logo.asset->url,\n    width,\n    height\n  }\n': CLIENTS_QUERY_RESULT;
-    '\n  *[_type == "service"]|order(order asc){ title, items }\n': SERVICES_QUERY_RESULT;
+    '\n  *[_type == "testimonial"]|order(order asc){\n    quote,\n    name,\n    role,\n    "avatar": avatar.asset->url\n  }\n': TESTIMONIALS_QUERY_RESULT;
+    '\n  *[_type == "pricingPlan"]|order(order asc){\n    name,\n    price,\n    billingLabel,\n    description,\n    features,\n    highlighted,\n    ctaLabel\n  }\n': PRICING_PLANS_QUERY_RESULT;
+    '\n  *[_type == "project"]|order(order asc){ \n  "slug": slug.current,\n  title,\n  tags,\n  "coverImage": coverImage.asset->url,\n  workBlurb,\n  heroVideoId,\n  featured,\n  order\n }\n': PROJECTS_QUERY_RESULT;
+    '\n  *[_type == "project" && featured == true]|order(order asc){ \n  "slug": slug.current,\n  title,\n  tags,\n  "coverImage": coverImage.asset->url,\n  workBlurb,\n  heroVideoId,\n  featured,\n  order\n }\n': FEATURED_PROJECTS_QUERY_RESULT;
+    '\n  *[_type == "project" && slug.current == $slug][0]{\n    \n  "slug": slug.current,\n  title,\n  tags,\n  "coverImage": coverImage.asset->url,\n  workBlurb,\n  heroVideoId,\n  featured,\n  order\n,\n    client,\n    category,\n    location,\n    duration,\n    deliveryFormat,\n    roleItems,\n    about[]{ ..., _type == "image" => { ..., "url": asset->url } },\n    behindTheScenes[]{ ..., _type == "image" => { ..., "url": asset->url } },\n    creativeDirection[]{ ..., _type == "image" => { ..., "url": asset->url } },\n    results,\n    gallery[]{ ..., "url": asset->url }\n  }\n': PROJECT_QUERY_RESULT;
+    '\n  *[_type == "project" && defined(slug.current)]{ "slug": slug.current }\n': PROJECT_SLUGS_QUERY_RESULT;
+    '\n  *[_type == "service"]|order(order asc){ \n  "slug": slug.current,\n  title,\n  shortDescription,\n  tags,\n  heroVideoId,\n  order\n }\n': SERVICES_QUERY_RESULT;
+    '\n  *[_type == "service" && slug.current == $slug][0]{\n    \n  "slug": slug.current,\n  title,\n  shortDescription,\n  tags,\n  heroVideoId,\n  order\n,\n    intro[]{ ..., _type == "image" => { ..., "url": asset->url } },\n    whatsIncluded,\n    whyChooseUs{ body, bullets, "image": image.asset->url },\n    idealFor{ items, "image": image.asset->url }\n  }\n': SERVICE_QUERY_RESULT;
+    '\n  *[_type == "service" && defined(slug.current)]{ "slug": slug.current }\n': SERVICE_SLUGS_QUERY_RESULT;
+    '\n  *[_type == "article"]|order(publishedAt desc){ \n  "slug": slug.current,\n  title,\n  excerpt,\n  category,\n  tags,\n  date,\n  readTime,\n  publishedAt,\n  "author": author->{ name, "avatar": avatar.asset->url },\n  "image": image.asset->url\n }\n': ARTICLES_QUERY_RESULT;
+    '\n  *[_type == "article" && slug.current == $slug][0]{\n    \n  "slug": slug.current,\n  title,\n  excerpt,\n  category,\n  tags,\n  date,\n  readTime,\n  publishedAt,\n  "author": author->{ name, "avatar": avatar.asset->url },\n  "image": image.asset->url\n,\n    body[]{\n      ...,\n      _type == "image" => { ..., "url": asset->url }\n    }\n  }\n': ARTICLE_QUERY_RESULT;
+    '\n  *[_type == "article" && defined(slug.current)]{ "slug": slug.current }\n': ARTICLE_SLUGS_QUERY_RESULT;
   }
 }
 // Lets @sanity/client releases that predate the global registry read it too

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="70" viewBox="0 0 300 70" role="img" aria-label="Montra">
+  <rect width="300" height="70" fill="none"/>
+  <text x="0" y="55" fill="#ffffff" font-family="Impact, Anton, Arial Black, sans-serif" font-size="56" font-weight="900" letter-spacing="-3">M</text>
+  <path d="M76 7h70v56H76z" fill="#ed0614"/>
+  <path d="M94 18h39c8 0 13 5 13 13v8c0 8-5 13-13 13H94c-8 0-13-5-13-13v-8c0-8 5-13 13-13z" fill="#111111"/>
+  <text x="150" y="55" fill="#ffffff" font-family="Impact, Anton, Arial Black, sans-serif" font-size="56" font-weight="900" letter-spacing="-3">NTRA</text>
+</svg>
