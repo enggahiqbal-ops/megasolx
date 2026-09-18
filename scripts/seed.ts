@@ -1,9 +1,10 @@
 /**
- * Seeds the Sanity dataset from the local `data/*.ts` sample content.
+ * Seeds the Sanity dataset with Montra Studio's placeholder content from
+ * `data/montra.ts`.
  *
  * Usage:
  *   1. Create a write token (role: Editor) at
- *      https://www.sanity.io/manage/project/cxr8q1di/api/tokens
+ *      https://www.sanity.io/manage/project/<project-id>/api/tokens
  *   2. Put it in .env.local as SANITY_API_WRITE_TOKEN
  *   3. npm run seed
  *
@@ -16,12 +17,20 @@ import { basename, join } from "node:path";
 
 import { createClient } from "@sanity/client";
 
-import { articles } from "../data/articles.ts";
-import { clients } from "../data/clients.ts";
-import { expertiseList, expertiseNav } from "../data/expertise.ts";
-import { projects, workCategories } from "../data/projects.ts";
-import { services } from "../data/services.ts";
-import { siteConfig } from "../data/site.ts";
+import {
+  aboutPage,
+  articles,
+  clients,
+  contactPage,
+  homePage,
+  pricingPage,
+  pricingPlans,
+  projects,
+  services,
+  siteConfig,
+  team,
+  testimonials,
+} from "../data/montra.ts";
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
@@ -47,14 +56,16 @@ const assetCache = new Map<string, Promise<string | null>>();
 const existingAssets = new Map<string, string>();
 
 async function primeExistingAssets() {
-  const rows: { _id: string; originalFilename: string | null }[] =
-    await client.fetch(`*[_type == "sanity.imageAsset"]{ _id, originalFilename }`);
+  const rows: { _id: string; originalFilename: string | null }[] = await client.fetch(
+    `*[_type == "sanity.imageAsset"]{ _id, originalFilename }`,
+  );
   for (const row of rows) {
     if (row.originalFilename) existingAssets.set(row.originalFilename, row._id);
   }
 }
 
-function uploadImage(publicPath: string): Promise<string | null> {
+function uploadImage(publicPath?: string): Promise<string | null> {
+  if (!publicPath) return Promise.resolve(null);
   const filename = basename(publicPath);
   const cached = assetCache.get(publicPath);
   if (cached) return cached;
@@ -64,9 +75,7 @@ function uploadImage(publicPath: string): Promise<string | null> {
     if (reused) return reused;
     let buffer: Buffer;
     try {
-      buffer = await readFile(
-        join(ROOT, "public", publicPath.replace(/^\//, "")),
-      );
+      buffer = await readFile(join(ROOT, "public", publicPath.replace(/^\//, "")));
     } catch {
       console.warn(`  ! skipping missing asset ${publicPath}`);
       return null;
@@ -80,13 +89,10 @@ function uploadImage(publicPath: string): Promise<string | null> {
   return task;
 }
 
-async function imageRef(publicPath: string) {
+async function imageRef(publicPath?: string) {
   const ref = await uploadImage(publicPath);
   if (!ref) return undefined;
-  return {
-    _type: "image" as const,
-    asset: { _type: "reference" as const, _ref: ref },
-  };
+  return { _type: "image" as const, asset: { _type: "reference" as const, _ref: ref } };
 }
 
 function slugify(input: string) {
@@ -96,113 +102,32 @@ function slugify(input: string) {
     .replace(/(^-|-$)/g, "");
 }
 
+function toBlocks(text?: string) {
+  if (!text) return undefined;
+  return text
+    .split(/\n{2,}/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean)
+    .map((paragraph) => ({
+      _type: "block" as const,
+      _key: slugify(paragraph.slice(0, 40)) || Math.random().toString(36).slice(2),
+      style: "normal" as const,
+      children: [
+        {
+          _type: "span" as const,
+          _key: `${slugify(paragraph.slice(0, 20)) || "span"}-0`,
+          text: paragraph,
+        },
+      ],
+    }));
+}
+
+function keyed<T extends Record<string, unknown>>(items: T[]) {
+  return items.map((item, i) => ({ _key: `item-${i}`, ...item }));
+}
+
 async function buildDocuments() {
   const docs: Record<string, unknown>[] = [];
-
-  // --- Authors (derived from articles) ---
-  const authorByName = new Map<string, string>();
-  for (const article of articles) {
-    if (authorByName.has(article.author.name)) continue;
-    const id = `author-${slugify(article.author.name)}`;
-    authorByName.set(article.author.name, id);
-    docs.push({
-      _id: id,
-      _type: "author",
-      name: article.author.name,
-      avatar: await imageRef(article.author.avatar),
-    });
-  }
-
-  // --- Projects ---
-  for (const [i, p] of projects.entries()) {
-    docs.push({
-      _id: `project-${p.slug}`,
-      _type: "project",
-      title: p.title,
-      slug: { _type: "slug", current: p.slug },
-      category: p.category,
-      year: p.year,
-      layout: p.layout,
-      aspectRatio: p.aspectRatio,
-      image: await imageRef(p.image),
-      description: p.description,
-      tags: p.tags,
-      featured: Boolean(p.featured),
-      textColor: p.textColor ?? "white",
-      order: (i + 1) * 10,
-    });
-  }
-
-  // --- Articles ---
-  for (const [i, a] of articles.entries()) {
-    const parsed = new Date(a.date);
-    const publishedAt = Number.isNaN(parsed.getTime())
-      ? new Date(Date.now() - i * 86_400_000).toISOString()
-      : parsed.toISOString();
-    docs.push({
-      _id: `article-${a.slug}`,
-      _type: "article",
-      title: a.title,
-      slug: { _type: "slug", current: a.slug },
-      excerpt: a.excerpt,
-      category: a.category,
-      date: a.date,
-      readTime: a.readTime,
-      publishedAt,
-      author: {
-        _type: "reference",
-        _ref: authorByName.get(a.author.name),
-      },
-      image: await imageRef(a.image),
-    });
-  }
-
-  // --- Expertise ---
-  for (const [i, e] of expertiseList.entries()) {
-    docs.push({
-      _id: `expertise-${e.slug}`,
-      _type: "expertise",
-      title: e.title,
-      slug: { _type: "slug", current: e.slug },
-      subtitle: e.subtitle,
-      description: e.description,
-      features: e.features.map((f) => ({
-        _key: slugify(f.title),
-        title: f.title,
-        description: f.description,
-      })),
-      image: await imageRef(e.image),
-      order: (i + 1) * 10,
-      ...(e.relatedSlug
-        ? { related: { _type: "reference", _ref: `expertise-${e.relatedSlug}` } }
-        : {}),
-    });
-  }
-
-  // --- Clients ---
-  for (const [i, c] of clients.entries()) {
-    docs.push({
-      _id: `client-${c.id}`,
-      _type: "client",
-      name: c.name,
-      slug: { _type: "slug", current: c.id },
-      logo: await imageRef(c.logo),
-      width: c.width,
-      height: c.height,
-      order: (i + 1) * 10,
-    });
-  }
-
-  // --- Services ---
-  for (const [i, s] of services.entries()) {
-    docs.push({
-      _id: `service-${slugify(s.title)}`,
-      _type: "service",
-      title: s.title,
-      items: s.items,
-      order: (i + 1) * 10,
-    });
-  }
 
   // --- Site settings (singleton) ---
   docs.push({
@@ -212,36 +137,185 @@ async function buildDocuments() {
     tagline: siteConfig.tagline,
     description: siteConfig.description,
     url: siteConfig.url,
+    logo: await imageRef(siteConfig.logo),
+    ctaLabel: siteConfig.ctaLabel,
+    ctaHref: siteConfig.ctaHref,
+    footerHeading: siteConfig.footerHeading,
+    footerCopyright: siteConfig.footerCopyright,
+    newsletter: siteConfig.newsletter,
+    nav: siteConfig.nav.map((n, i) => ({ _key: `nav-${i}`, _type: "navLink", ...n })),
     email: siteConfig.email,
-    introStatement: siteConfig.introStatement,
-    aboutHeading: siteConfig.aboutHeading,
-    aboutCopy: siteConfig.aboutCopy,
-    aboutImage: await imageRef("/images/about-teaser.svg"),
-    aboutLink: siteConfig.aboutLink,
-    stats: siteConfig.stats.map((s) => ({ _key: slugify(s.label), ...s })),
-    footerCtaLine1: siteConfig.footer.ctaLine1,
-    footerCtaLine2: siteConfig.footer.ctaLine2,
-    footerTickerWords: siteConfig.footer.tickerWords,
-    footerCopyright: siteConfig.footer.copyright,
-    nav: siteConfig.nav.map((n, i) => ({
-      _key: `nav-${i}`,
-      _type: "navLink",
-      ...n,
-    })),
-    workCategories: workCategories.map((c) => ({ _key: c.slug, ...c })),
-    expertiseMenu: expertiseNav.groups.map((g) => ({
-      _key: slugify(g.heading),
-      _type: "expertiseGroup",
-      heading: g.heading,
-      links: g.links.map((l, i) => ({
-        _key: `${slugify(g.heading)}-${i}`,
-        _type: "navLink",
-        ...l,
-      })),
-    })),
-    locations: siteConfig.locations.map((l) => ({ _key: slugify(l.city), ...l })),
+    contact: siteConfig.contact,
     social: siteConfig.social,
+    ctaBanner: siteConfig.ctaBanner,
+    trustSection: {
+      heading: siteConfig.trustSection.heading,
+      points: keyed(siteConfig.trustSection.points),
+    },
+    trustStat: siteConfig.trustStat,
+    highlightCta: siteConfig.highlightCta,
   });
+
+  // --- Home page (singleton) ---
+  docs.push({
+    _id: "homePage",
+    _type: "homePage",
+    hero: homePage.hero,
+    coreServices: {
+      heading: homePage.coreServices.heading,
+      intro: homePage.coreServices.intro,
+      items: keyed(homePage.coreServices.items),
+    },
+  });
+
+  // --- About page (singleton) ---
+  docs.push({
+    _id: "aboutPage",
+    _type: "aboutPage",
+    tagline: aboutPage.tagline,
+    heroStatement: aboutPage.heroStatement,
+    secondaryStatement: aboutPage.secondaryStatement,
+    stats: keyed(aboutPage.stats),
+  });
+
+  // --- Contact page (singleton) ---
+  docs.push({
+    _id: "contactPage",
+    _type: "contactPage",
+    heading: contactPage.heading,
+    body: contactPage.body,
+    faqs: keyed(contactPage.faqs),
+  });
+
+  // --- Pricing page (singleton) ---
+  docs.push({
+    _id: "pricingPage",
+    _type: "pricingPage",
+    heading: pricingPage.heading,
+    body: pricingPage.body,
+    faqs: keyed(pricingPage.faqs),
+  });
+
+  // --- Services ---
+  for (const s of services) {
+    docs.push({
+      _id: `service-${s.slug}`,
+      _type: "service",
+      title: s.title,
+      slug: { _type: "slug", current: s.slug },
+      shortDescription: s.shortDescription,
+      tags: s.tags,
+      heroVideoId: s.heroVideoId,
+      intro: toBlocks(s.intro),
+      whatsIncluded: s.whatsIncluded ? keyed(s.whatsIncluded) : undefined,
+      whyChooseUs: s.whyChooseUs
+        ? { body: s.whyChooseUs.body, bullets: s.whyChooseUs.bullets, image: await imageRef(s.whyChooseUs.image) }
+        : undefined,
+      idealFor: s.idealFor ? { items: s.idealFor.items, image: await imageRef(s.idealFor.image) } : undefined,
+      order: s.order,
+    });
+  }
+
+  // --- Projects ---
+  for (const p of projects) {
+    docs.push({
+      _id: `project-${p.slug}`,
+      _type: "project",
+      title: p.title,
+      slug: { _type: "slug", current: p.slug },
+      coverImage: await imageRef(p.coverImage),
+      tags: p.tags,
+      workBlurb: p.workBlurb,
+      heroVideoId: p.heroVideoId,
+      client: p.client,
+      category: p.category,
+      location: p.location,
+      duration: p.duration,
+      deliveryFormat: p.deliveryFormat,
+      roleItems: p.roleItems,
+      about: toBlocks(p.about),
+      behindTheScenes: toBlocks(p.behindTheScenes),
+      creativeDirection: toBlocks(p.creativeDirection),
+      results: p.results ? keyed(p.results) : undefined,
+      gallery: p.gallery ? await Promise.all(p.gallery.map(async (src) => await imageRef(src))) : undefined,
+      featured: p.featured,
+      order: p.order,
+    });
+  }
+
+  // --- Team ---
+  for (const m of team) {
+    docs.push({
+      _id: `team-${slugify(m.name)}`,
+      _type: "teamMember",
+      name: m.name,
+      role: m.role,
+      photo: await imageRef(m.photo),
+      socials: m.socials,
+      order: m.order,
+    });
+  }
+
+  // --- Clients ---
+  for (const c of clients) {
+    docs.push({
+      _id: `client-${c.id}`,
+      _type: "client",
+      name: c.name,
+      slug: { _type: "slug", current: c.id },
+      logo: await imageRef(c.logo),
+      width: c.width,
+      height: c.height,
+      order: c.order,
+    });
+  }
+
+  // --- Testimonials ---
+  for (const t of testimonials) {
+    docs.push({
+      _id: `testimonial-${slugify(t.name)}`,
+      _type: "testimonial",
+      quote: t.quote,
+      name: t.name,
+      role: t.role,
+      avatar: await imageRef(t.avatar),
+      order: t.order,
+    });
+  }
+
+  // --- Pricing plans ---
+  for (const p of pricingPlans) {
+    docs.push({
+      _id: `pricingPlan-${slugify(p.name)}`,
+      _type: "pricingPlan",
+      name: p.name,
+      price: p.price,
+      billingLabel: p.billingLabel,
+      description: p.description,
+      features: p.features,
+      highlighted: p.highlighted,
+      ctaLabel: p.ctaLabel,
+      order: p.order,
+    });
+  }
+
+  // --- Articles (blog) ---
+  for (const a of articles) {
+    docs.push({
+      _id: `article-${a.slug}`,
+      _type: "article",
+      title: a.title,
+      slug: { _type: "slug", current: a.slug },
+      excerpt: a.excerpt,
+      category: a.category,
+      tags: a.tags,
+      publishedAt: new Date("2025-07-19").toISOString(),
+      date: a.date,
+      readTime: a.readTime,
+      image: await imageRef(a.image),
+      body: toBlocks(a.body),
+    });
+  }
 
   return docs;
 }

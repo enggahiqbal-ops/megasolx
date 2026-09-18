@@ -19,28 +19,17 @@ embedded [Sanity](https://www.sanity.io) Studio.
    | `SANITY_API_READ_TOKEN`  | Viewer | Draft-mode preview + live content     |
    | `SANITY_API_WRITE_TOKEN` | Editor | One-off seeding (`npm run seed` only) |
 
-3. Seed the dataset. `seed:dummy` generates a full set of placeholder content
-   for every page (8 projects with case studies, 8 articles, all 20 expertise
-   entries, clients, services, site settings). `seed` just imports the smaller
-   original samples from `data/*.ts`.
+3. Seed the dataset with the placeholder "Montra Studio" content from
+   [`data/montra.ts`](data/montra.ts) (singletons, 5 services, 5 projects, 6 team
+   members, 5 client logos, 6 testimonials, 3 pricing plans, 10 blog posts):
 
    ```bash
-   npm run seed:dummy   # recommended for development
-   # or
    npm run seed
    ```
 
-   `seed:dummy` clears the existing content documents first (image assets are
-   kept); `seed` upserts by id.
+   Upserts by id, so re-running it is safe.
 
-4. (optional) Build the homepage showreel — stitches a few free Pexels stock
-   clips into a ~20s reel and sets it as `siteSettings.showreelVideo`:
-
-   ```bash
-   npm run showreel
-   ```
-
-5. Run the dev server:
+4. Run the dev server:
 
    ```bash
    npm run dev
@@ -68,7 +57,10 @@ embedded [Sanity](https://www.sanity.io) Studio.
   see unpublished drafts live.
 
 The marketing site lives under the `app/(site)` route group so the Studio route
-renders without the site chrome (nav, footer, smooth-scroll, cursor).
+renders without the site chrome (nav, footer). The frontend design is a
+faithful React/Tailwind rebuild of the "Montra" Next.js template
+(Bootstrap/jQuery in the original — reimplemented here without either), with
+its `main.css`/`responsive.css`/vendor CSS served from `public/assets/montra`.
 
 ## Deployment
 

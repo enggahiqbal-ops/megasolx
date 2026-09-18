@@ -31,6 +31,14 @@ export const article = defineType({
       options: { layout: "tags" },
     }),
     defineField({
+      name: "tags",
+      title: "Tags",
+      type: "array",
+      of: [defineArrayMember({ type: "string" })],
+      options: { layout: "tags" },
+      description: "Shown as a tag cloud on the single-post page.",
+    }),
+    defineField({
       name: "publishedAt",
       title: "Published at",
       type: "datetime",
