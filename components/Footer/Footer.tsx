@@ -18,13 +18,13 @@ const defaultNav = [
 
 export default function Footer({ settings }: Props) {
   const nav = settings?.nav?.length ? settings.nav : defaultNav;
-  const heading = settings?.footerHeading ?? "Montra - Film & Video Production";
-  const address = settings?.contact?.address ?? "123 Montra Studio Bulevard., Los Angeles, CA 90210";
+  const heading = settings?.footerHeading ?? "Megasolx - Film & Video Production";
+  const address = settings?.contact?.address ?? "123 Megasolx Bulevard., Los Angeles, CA 90210";
   const phone = settings?.contact?.phone ?? "+1 (800) 234-5678";
   const newsletterHeading =
     settings?.newsletter?.heading ?? "Subscribe to our newsletter for the latest updates";
   const social = settings?.social;
-  const copyright = settings?.footerCopyright ?? "© 2025 Montra Studio. All rights reserved.";
+  const copyright = settings?.footerCopyright ?? "© 2025 Megasolx. All rights reserved.";
 
   return (
     <footer>
@@ -84,7 +84,7 @@ export default function Footer({ settings }: Props) {
               </div>
             </div>
             <div className="footer-title-container">
-              <span className="footer-title">{settings?.name ?? "Montra Studio"}</span>
+              <span className="footer-title">{settings?.name ?? "Megasolx"}</span>
             </div>
             <div className="footer-copyright-container">
               <Link href="/privacy-policy" className="legallink">

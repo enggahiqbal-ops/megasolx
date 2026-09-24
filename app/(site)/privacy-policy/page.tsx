@@ -47,7 +47,7 @@ const SECTIONS: { heading: string; body: string }[] = [
   },
   {
     heading: "12. Contact Us",
-    body: "If you have any questions or concerns about our Privacy Policy, cookies, or compliance with GDPR, U.S. data laws, or California state regulations, please contact us at hello@montrastudio.com.",
+    body: "If you have any questions or concerns about our Privacy Policy, cookies, or compliance with GDPR, U.S. data laws, or California state regulations, please contact us at hello@megasolx.com.",
   },
 ];
 
@@ -56,7 +56,7 @@ export default function PrivacyPolicyPage() {
     <main className="bg-black px-[5%] py-16 text-white md:py-24">
       <h1 className="font-display-condensed text-4xl uppercase md:text-6xl">Privacy Policy</h1>
       <p className="mt-8 max-w-3xl text-sm leading-relaxed text-white/60 md:text-base">
-        Montra Studio is committed to protecting your privacy. This Privacy
+        Megasolx is committed to protecting your privacy. This Privacy
         Policy explains how we collect, use, and protect the personal information you provide
         when opting in to receive SMS/MMS and email communications from us. By consenting to
         receive messages from us, you agree to the practices described in this policy.

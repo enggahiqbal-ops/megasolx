@@ -102,7 +102,7 @@ export default async function ContactPage() {
                   </div>
                   <div className="d-flex flex-column gspace-2">
                     <span className="contact-info-heading">Email Address</span>
-                    <h4>{settings?.email ?? "hello@montrastudio.com"}</h4>
+                    <h4>{settings?.email ?? "hello@megasolx.com"}</h4>
                   </div>
                   <div className="d-flex flex-column gspace-2">
                     <span className="contact-info-heading">Bussiness Hours</span>
@@ -110,7 +110,7 @@ export default async function ContactPage() {
                   </div>
                   <div className="d-flex flex-column gspace-2">
                     <span className="contact-info-heading">Studio Location</span>
-                    <h4>{settings?.contact?.address ?? "123 Montra Studio Bulevard., Los Angeles, CA 90210"}</h4>
+                    <h4>{settings?.contact?.address ?? "123 Megasolx Bulevard., Los Angeles, CA 90210"}</h4>
                   </div>
                   <div className="d-flex flex-column gspace-2">
                     <span className="contact-info-heading">Social Media</span>

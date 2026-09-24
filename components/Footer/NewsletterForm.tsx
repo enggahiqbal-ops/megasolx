@@ -30,7 +30,7 @@ export default function NewsletterForm() {
         </div>
       )}
       <form id="newsletter-form" className="form" onSubmit={handleSubmit}>
-        <input type="email" id="newsletter" name="newsletter" placeholder="Hello@Montrastudio.com" />
+        <input type="email" id="newsletter" name="newsletter" placeholder="Hello@megasolx.com" />
         <button type="submit" className="btn btn-accent-primary">
           Subscribe Now
         </button>

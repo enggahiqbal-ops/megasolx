@@ -45,6 +45,14 @@ export const homePage = defineType({
         { name: "heading", type: "string" },
         { name: "intro", type: "text", rows: 3 },
         {
+          name: "image",
+          title: "Side image",
+          description: "Cut-out image shown beside the service cards (transparent PNG works best).",
+          type: "image",
+          options: { hotspot: true },
+          fields: [{ name: "alt", type: "string", title: "Alt text" }],
+        },
+        {
           name: "items",
           title: "Service cards",
           type: "array",

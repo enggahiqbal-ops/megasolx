@@ -11,6 +11,7 @@ export const SETTINGS_QUERY = defineQuery(`
     "logo": logo.asset->url,
     ctaLabel,
     ctaHref,
+    circleLogoText,
     footerCopyright,
     footerHeading,
     newsletter,
@@ -28,7 +29,11 @@ export const SETTINGS_QUERY = defineQuery(`
 export const HOME_PAGE_QUERY = defineQuery(`
   *[_type == "homePage"][0]{
     hero,
-    coreServices
+    coreServices{
+      ...,
+      "image": image.asset->url,
+      "imageAlt": image.alt
+    }
   }
 `);
 

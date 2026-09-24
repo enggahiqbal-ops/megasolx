@@ -67,9 +67,6 @@ export default async function HomePage() {
                   <div className="home-title-container">
                     <div className="d-flex flex-row gspace-y-0 gspace-x-1 align-items-center">
                       <h1>{hero?.headingWordPart1 ?? "Str"}</h1>
-                      <div className="home-spacer">
-                        <div className="spacer-inner" />
-                      </div>
                       <h1>{hero?.headingWordPart2 ?? "ong"}</h1>
                     </div>
                     <h1>{hero?.headingLine2 ?? "Crafting Visuals"}</h1>
@@ -91,7 +88,7 @@ export default async function HomePage() {
                     </div>
                     <p>
                       {hero?.intro ??
-                        "Montra is a full-service film production studio delivering bold visuals and powerful narratives. From commercials to creative films we bring your vision to life."}
+                        "Megasolx is a full-service film production studio delivering bold visuals and powerful narratives. From commercials to creative films we bring your vision to life."}
                     </p>
                   </div>
                 </div>
@@ -146,14 +143,14 @@ export default async function HomePage() {
               <div className="core-service-logo-container">
                 <div className="core-service__circle-logo">
                   <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="circleLogoTitle">
-                    <title id="circleLogoTitle">Montra Film Studio Logo</title>
+                    <title id="circleLogoTitle">Megasolx Film Studio Logo</title>
                     <defs>
                       <path id="textcircle" d="M100,100 m-80,0 a80,80 0 1,1 160,0 a80,80 0 1,1 -160,0" />
                     </defs>
                     <circle cx="100" cy="100" r="95" />
                     <text dy="5">
                       <textPath xlinkHref="#textcircle" className="core-service__circle-logo-title" startOffset="0%">
-                        • MONTRA FILM AND VIDEO PRODUCTION STUDIO • BRINGING IDEAS TO LIFE ON SCREEN
+                        {settings?.circleLogoText ?? "• MEGASOLX FILM AND VIDEO PRODUCTION STUDIO • BRINGING IDEAS TO LIFE ON SCREEN"}
                       </textPath>
                     </text>
                     <g transform="translate(100 100)">
@@ -175,9 +172,8 @@ export default async function HomePage() {
             <div className="d-flex flex-column gspace-5">
               <div className="core-service-description">
                 <p>
-                  Montra is a creative film and video production studio based on the belief that every story
-                  deserves to be told with power, passion, and precision. Whether it&apos;s a commercial,
-                  documentary, or branded content — we craft visuals that resonate.
+                  {coreServices?.intro ??
+                    "Megasolx is a creative film and video production studio based on the belief that every story deserves to be told with power, passion, and precision. Whether it's a commercial, documentary, or branded content — we craft visuals that resonate."}
                 </p>
               </div>
 
@@ -185,7 +181,7 @@ export default async function HomePage() {
                 {coreItems.map((item, i) => (
                   <div className={`card card-core-service ${item.highlighted ? "highlight-core" : ""}`} key={item.title}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={`/assets/montra/images/${coreIcons[i]}`} alt={`${item.title} Icon`} className="core-service-icon" />
+                    <img src={`/assets/montra/images/${coreIcons[i % coreIcons.length]}`} alt={`${item.title} Icon`} className="core-service-icon" />
                     <div className="d-flex flex-column gspace-2">
                       <h4>{item.title}</h4>
                       {item.description && <p className="text-center text-md-start">{item.description}</p>}
@@ -199,8 +195,8 @@ export default async function HomePage() {
           <div className="core-service-image">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/montra/images/young-guy-enjoying-taking-photos-3UJ8HB8.png"
-              alt="Photographer working with camera"
+              src={coreServices?.image ?? "/assets/montra/images/young-guy-enjoying-taking-photos-3UJ8HB8.png"}
+              alt={coreServices?.imageAlt ?? "Photographer working with camera"}
               className="img-fluid"
             />
           </div>

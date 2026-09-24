@@ -40,7 +40,7 @@ const fallbackPoints = [
 
 export default function TrustSection({ trustSection, trustStat }: Props) {
   const points = trustSection?.points?.length ? trustSection.points : fallbackPoints;
-  const heading = trustSection?.heading ?? "Why Brands Trust Montra";
+  const heading = trustSection?.heading ?? "Why Brands Trust Megasolx";
   const statValue = trustStat?.value ?? "150";
   const statLabel = trustStat?.label ?? "Projects Completed";
 
