@@ -1,10 +1,17 @@
 @import "tailwindcss";
 
 /*
-  Tailwind's `collapse` utility (visibility: collapse) clashes with Bootstrap's
-  `.collapse` on the navbar and hides the nav links, so don't generate it.
-*/
-@source not inline("collapse");
+ * Tailwind's `collapse` utility sets `visibility: collapse` (for hiding
+ * table rows). It collides with Bootstrap's `.collapse`/`.accordion-collapse`
+ * classes used by the navbar and accordions, which rely on `display` (not
+ * `visibility`) to show/hide. Without this, expanded/shown elements keep
+ * `visibility: collapse` and render invisible even though `display` is
+ * correct (e.g. the nav links or an open accordion panel taking up layout
+ * space but not being visible).
+ */
+.collapse {
+  visibility: visible;
+}
 
 @media (prefers-reduced-motion: reduce) {
   *,
