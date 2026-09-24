@@ -140,6 +140,7 @@ async function buildDocuments() {
     logo: await imageRef(siteConfig.logo),
     ctaLabel: siteConfig.ctaLabel,
     ctaHref: siteConfig.ctaHref,
+    circleLogoText: siteConfig.circleLogoText,
     footerHeading: siteConfig.footerHeading,
     footerCopyright: siteConfig.footerCopyright,
     newsletter: siteConfig.newsletter,
@@ -164,6 +165,7 @@ async function buildDocuments() {
     coreServices: {
       heading: homePage.coreServices.heading,
       intro: homePage.coreServices.intro,
+      image: await imageRef(homePage.coreServices.image),
       items: keyed(homePage.coreServices.items),
     },
   });

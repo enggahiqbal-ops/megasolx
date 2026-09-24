@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+/*
+  Tailwind's `collapse` utility (visibility: collapse) clashes with Bootstrap's
+  `.collapse` on the navbar and hides the nav links, so don't generate it.
+*/
+@source not inline("collapse");
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

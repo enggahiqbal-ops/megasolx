@@ -9,12 +9,12 @@ export async function generateMetadata(): Promise<Metadata> {
     stega: false,
   });
 
-  const name = settings?.name ?? "Montra Studio";
+  const name = settings?.name ?? "Megasolx";
   const tagline = settings?.tagline ?? "Film & Video Production";
   const description =
     settings?.description ??
-    "Montra Studio is a film and video production agency crafting cinematic stories for brands.";
-  const url = settings?.url ?? "https://www.montrastudio.com";
+    "Megasolx is a film and video production agency crafting cinematic stories for brands.";
+  const url = settings?.url ?? "https://www.megasolx.com";
 
   return {
     title: {

@@ -22,6 +22,7 @@ const servicesLinks = [
 
 export default function Header({ settings }: Props) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<"services" | "pages" | null>(null);
   const navRef = useRef<HTMLDivElement>(null);
 
@@ -35,13 +36,20 @@ export default function Header({ settings }: Props) {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   const logo = settings?.logo ?? "/assets/montra/images/Montra-Logo.png";
   const ctaLabel = settings?.ctaLabel ?? "Get a Quote";
   const ctaHref = settings?.ctaHref ?? "/contact";
 
   return (
     <header>
-      <div className="navbar-container" ref={navRef}>
+      <div className={`navbar-container ${scrolled ? "scrolled" : ""}`} ref={navRef}>
         <div className="hero-container">
           <nav className="navbar navbar-expand-lg">
             <div className="navbar-nav-container">

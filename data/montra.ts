@@ -1,21 +1,22 @@
 /**
- * Placeholder content for "Montra Studio" — the fictional film/video
+ * Placeholder content for "Megasolx" — the fictional film/video
  * production business from the Montra Next.js template. This is clearly
  * placeholder/demo content, seeded so the new schema has something to render;
  * edit or replace it in Sanity Studio afterward.
  */
 
 export const siteConfig = {
-  name: "Montra Studio",
+  name: "Megasolx",
   tagline: "Film & Video Production",
   description:
-    "Montra Studio is a full-service film and video production studio delivering bold visuals and powerful narratives for brands, artists, and storytellers.",
-  url: "https://www.montrastudio.com",
+    "Megasolx is a full-service film and video production studio delivering bold visuals and powerful narratives for brands, artists, and storytellers.",
+  url: "https://www.megasolx.com",
   logo: "/assets/montra/images/Montra-Logo.png",
   ctaLabel: "Get a Quote",
   ctaHref: "/contact",
-  footerHeading: "Montra - Film & Video Production",
-  footerCopyright: "© 2025 Montra Studio. All rights reserved.",
+  circleLogoText: "• MEGASOLX FILM AND VIDEO PRODUCTION STUDIO • BRINGING IDEAS TO LIFE ON SCREEN",
+  footerHeading: "Megasolx - Film & Video Production",
+  footerCopyright: "© 2025 Megasolx. All rights reserved.",
   newsletter: {
     heading: "Subscribe to our newsletter for the latest updates",
   },
@@ -27,11 +28,11 @@ export const siteConfig = {
     { label: "Blog", href: "/blog" },
     { label: "Contact", href: "/contact" },
   ],
-  email: "hello@montrastudio.com",
+  email: "hello@megasolx.com",
   contact: {
     phone: "+1 (234) 567-8901",
     businessHours: "Mon - Fri: 9AM - 6PM",
-    address: "123 Montra Studio Bulevard., Los Angeles, CA 90210",
+    address: "123 Megasolx Bulevard., Los Angeles, CA 90210",
     mapEmbedUrl:
       "https://maps.google.com/maps?q=Los%20Angeles%2C%20CA&t=m&z=12&output=embed&iwloc=near",
   },
@@ -49,7 +50,7 @@ export const siteConfig = {
     buttonHref: "/contact",
   },
   trustSection: {
-    heading: "Why Brands Trust Montra",
+    heading: "Why Brands Trust Megasolx",
     points: [
       {
         number: "01",
@@ -88,13 +89,14 @@ export const homePage = {
     headingWordPart2: "ong",
     headingLine2: "Crafting Visuals",
     intro:
-      "Montra is a full-service film production studio delivering bold visuals and powerful narratives. From commercials to creative films we bring your vision to life.",
+      "Megasolx is a full-service film production studio delivering bold visuals and powerful narratives. From commercials to creative films we bring your vision to life.",
     showreelVideoId: "pVA0G01aDfk",
   },
   coreServices: {
     heading: "Crafting Stories Through Cinematic Frames",
+    image: "/assets/montra/images/young-guy-enjoying-taking-photos-3UJ8HB8.png",
     intro:
-      "Montra is a creative film and video production studio based on the belief that every story deserves to be told with power, passion, and precision. Whether it's a commercial, documentary, or branded content — we craft visuals that resonate.",
+      "Megasolx is a creative film and video production studio based on the belief that every story deserves to be told with power, passion, and precision. Whether it's a commercial, documentary, or branded content — we craft visuals that resonate.",
     items: [
       {
         title: "Creative Film Direction",
@@ -167,7 +169,7 @@ export const contactPage = {
     {
       question: "How do I follow up if I haven't received a response?",
       answer:
-        "If you haven't heard from us within 48 hours, please check your spam folder or reach out to us directly via email at hello@montrastudio.com.",
+        "If you haven't heard from us within 48 hours, please check your spam folder or reach out to us directly via email at hello@megasolx.com.",
     },
   ],
 };
@@ -440,7 +442,7 @@ export const testimonials = [
     name: "Alex Morgan",
     role: "Marko Agency",
     quote:
-      "Working with Montra was a seamless process from start to finish, delivering exceptional visuals that exceeded our creative expectations perfectly.",
+      "Working with Megasolx was a seamless process from start to finish, delivering exceptional visuals that exceeded our creative expectations perfectly.",
     avatar: "/assets/montra/images/composite-collage-of-people-expressing-positive-em-JJYFLK3.jpg",
     order: 100,
   },
@@ -448,7 +450,7 @@ export const testimonials = [
     name: "Jamie Carter",
     role: "Lumia Agency",
     quote:
-      "Montra's production team delivered stunning work, showing clear attention to detail and an incredible ability to capture the message effectively.",
+      "Megasolx's production team delivered stunning work, showing clear attention to detail and an incredible ability to capture the message effectively.",
     avatar: "/assets/montra/images/Photo-5.jpg",
     order: 200,
   },
@@ -456,7 +458,7 @@ export const testimonials = [
     name: "Chloe Ramirez",
     role: "Novax Media",
     quote:
-      "Montra turned a complex script into a visually engaging production that not only met our vision, but also added layers of depth, story, and clarity we hadn't imagined.",
+      "Megasolx turned a complex script into a visually engaging production that not only met our vision, but also added layers of depth, story, and clarity we hadn't imagined.",
     avatar: "/assets/montra/images/Photo-13.jpg",
     order: 300,
   },
@@ -464,7 +466,7 @@ export const testimonials = [
     name: "David Foster",
     role: "Astrafilm",
     quote:
-      "We chose Montra for their vision, and they brought our documentary to life with professionalism, artistry, and timely communication throughout.",
+      "We chose Megasolx for their vision, and they brought our documentary to life with professionalism, artistry, and timely communication throughout.",
     avatar: "/assets/montra/images/Photo-12.jpg",
     order: 400,
   },
@@ -472,7 +474,7 @@ export const testimonials = [
     name: "Ethan Brooks",
     role: "Velocity Creative",
     quote:
-      "Impressed by their dedication and storytelling. Montra crafted visuals that matched our goals and resonated strongly with our audience base.",
+      "Impressed by their dedication and storytelling. Megasolx crafted visuals that matched our goals and resonated strongly with our audience base.",
     avatar: "/assets/montra/images/Photo-6.jpg",
     order: 500,
   },
@@ -480,7 +482,7 @@ export const testimonials = [
     name: "Nicole Adams",
     role: "Gravitas Media",
     quote:
-      "Every shot, every transition, every frame - Montra brought cinematic brilliance with unmatched precision and style that made our brand shine.",
+      "Every shot, every transition, every frame - Megasolx brought cinematic brilliance with unmatched precision and style that made our brand shine.",
     avatar: "/assets/montra/images/Photo-1.jpg",
     order: 600,
   },
@@ -554,7 +556,7 @@ export const articles = [
   {
     slug: "behind-the-scenes-visual-concept",
     title: "Behind the Scenes: Building a Visual Concept from Scratch",
-    excerpt: "From mood boards to shot lists — how a Montra visual concept comes together before a single frame is shot.",
+    excerpt: "From mood boards to shot lists — how a Megasolx visual concept comes together before a single frame is shot.",
     category: ["Creative Direction"],
     tags: [],
     date: "July 19, 2025",
@@ -573,7 +575,7 @@ export const articles = [
     readTime: "4 min read",
     image: "/assets/montra/images/two-confident-coworkers-indian-bearded-businessman-QHK94WX.jpg",
     body:
-      "A wide lens close to a subject feels intimate and a little uneasy. A long lens from a distance feels observational, almost voyeuristic. Neither is 'correct' — it depends entirely on what the scene needs to say.\n\nOn most Montra shoots we carry a small, deliberate set of primes rather than a do-everything zoom, precisely so every lens swap is a creative decision instead of a convenience one.",
+      "A wide lens close to a subject feels intimate and a little uneasy. A long lens from a distance feels observational, almost voyeuristic. Neither is 'correct' — it depends entirely on what the scene needs to say.\n\nOn most Megasolx shoots we carry a small, deliberate set of primes rather than a do-everything zoom, precisely so every lens swap is a creative decision instead of a convenience one.",
   },
   {
     slug: "beginners-guide-to-filmmaking",

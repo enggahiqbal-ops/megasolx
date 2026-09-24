@@ -65,14 +65,14 @@ export default async function AboutPage() {
                 <div className="about-circle-logo-container">
                   <div className="about__circle-logo">
                     <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="aboutCircleLogoTitle">
-                      <title id="aboutCircleLogoTitle">Montra Film Studio Logo</title>
+                      <title id="aboutCircleLogoTitle">Megasolx Film Studio Logo</title>
                       <defs>
                         <path id="aboutTextcircle" d="M100,100 m-80,0 a80,80 0 1,1 160,0 a80,80 0 1,1 -160,0" />
                       </defs>
                       <circle cx="100" cy="100" r="95" />
                       <text dy="5">
                         <textPath xlinkHref="#aboutTextcircle" className="about__circle-logo-title" startOffset="0%">
-                          • MONTRA FILM AND VIDEO PRODUCTION STUDIO • BRINGING IDEAS TO LIFE ON SCREEN
+                          {settings?.circleLogoText ?? "• MEGASOLX FILM AND VIDEO PRODUCTION STUDIO • BRINGING IDEAS TO LIFE ON SCREEN"}
                         </textPath>
                       </text>
                       <g transform="translate(100 100)">

@@ -354,6 +354,14 @@ export type HomePage = {
   coreServices?: {
     heading?: string;
     intro?: string;
+    image?: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+    };
     items?: Array<{
       title: string;
       description: string;
@@ -383,6 +391,7 @@ export type SiteSettings = {
   };
   ctaLabel?: string;
   ctaHref?: string;
+  circleLogoText?: string;
   footerCopyright?: string;
   footerHeading?: string;
   newsletter?: {
@@ -563,7 +572,7 @@ export type AllSanitySchemaTypes =
 
 // Source: sanity/lib/queries.ts
 // Variable: SETTINGS_QUERY
-// Query: *[_type == "siteSettings"][0]{    name,    tagline,    description,    url,    "logo": logo.asset->url,    ctaLabel,    ctaHref,    footerCopyright,    footerHeading,    newsletter,    nav[]{ label, href },    email,    contact,    social,    ctaBanner,    trustSection,    trustStat,    highlightCta  }
+// Query: *[_type == "siteSettings"][0]{    name,    tagline,    description,    url,    "logo": logo.asset->url,    ctaLabel,    ctaHref,    circleLogoText,    footerCopyright,    footerHeading,    newsletter,    nav[]{ label, href },    email,    contact,    social,    ctaBanner,    trustSection,    trustStat,    highlightCta  }
 export type SETTINGS_QUERY_RESULT = {
   name: string;
   tagline: string;
@@ -572,6 +581,7 @@ export type SETTINGS_QUERY_RESULT = {
   logo: string | null;
   ctaLabel: string | null;
   ctaHref: string | null;
+  circleLogoText: string | null;
   footerCopyright: string | null;
   footerHeading: string | null;
   newsletter: {
@@ -624,7 +634,7 @@ export type SETTINGS_QUERY_RESULT = {
 
 // Source: sanity/lib/queries.ts
 // Variable: HOME_PAGE_QUERY
-// Query: *[_type == "homePage"][0]{    hero,    coreServices  }
+// Query: *[_type == "homePage"][0]{    hero,    coreServices{      ...,      "image": image.asset->url,      "imageAlt": image.alt    }  }
 export type HOME_PAGE_QUERY_RESULT = {
   hero: {
     headingWordPart1: string;
@@ -636,12 +646,14 @@ export type HOME_PAGE_QUERY_RESULT = {
   coreServices: {
     heading?: string;
     intro?: string;
+    image: string | null;
     items?: Array<{
       title: string;
       description: string;
       highlighted?: boolean;
       _key: string;
     }>;
+    imageAlt: string | null;
   } | null;
 } | null;
 
@@ -1048,8 +1060,8 @@ export type ARTICLE_SLUGS_QUERY_RESULT = Array<{
 // Query TypeMap
 declare global {
   interface SanityQueries {
-    '\n  *[_type == "siteSettings"][0]{\n    name,\n    tagline,\n    description,\n    url,\n    "logo": logo.asset->url,\n    ctaLabel,\n    ctaHref,\n    footerCopyright,\n    footerHeading,\n    newsletter,\n    nav[]{ label, href },\n    email,\n    contact,\n    social,\n    ctaBanner,\n    trustSection,\n    trustStat,\n    highlightCta\n  }\n': SETTINGS_QUERY_RESULT;
-    '\n  *[_type == "homePage"][0]{\n    hero,\n    coreServices\n  }\n': HOME_PAGE_QUERY_RESULT;
+    '\n  *[_type == "siteSettings"][0]{\n    name,\n    tagline,\n    description,\n    url,\n    "logo": logo.asset->url,\n    ctaLabel,\n    ctaHref,\n    circleLogoText,\n    footerCopyright,\n    footerHeading,\n    newsletter,\n    nav[]{ label, href },\n    email,\n    contact,\n    social,\n    ctaBanner,\n    trustSection,\n    trustStat,\n    highlightCta\n  }\n': SETTINGS_QUERY_RESULT;
+    '\n  *[_type == "homePage"][0]{\n    hero,\n    coreServices{\n      ...,\n      "image": image.asset->url,\n      "imageAlt": image.alt\n    }\n  }\n': HOME_PAGE_QUERY_RESULT;
     '\n  *[_type == "aboutPage"][0]{\n    tagline,\n    heroStatement,\n    secondaryStatement,\n    statsHeading,\n    stats\n  }\n': ABOUT_PAGE_QUERY_RESULT;
     '\n  *[_type == "contactPage"][0]{\n    heading,\n    body,\n    faqs\n  }\n': CONTACT_PAGE_QUERY_RESULT;
     '\n  *[_type == "pricingPage"][0]{\n    heading,\n    body,\n    faqs\n  }\n': PRICING_PAGE_QUERY_RESULT;

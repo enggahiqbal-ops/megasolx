@@ -591,12 +591,21 @@ ul{
 
 .navbar-container {
     padding: 20px 20px 0px 20px;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 50%;
     width: 100%;
     transform: translateX(-50%);
-    z-index: 10;
+    z-index: 100;
+    transition: background-color 300ms ease, padding 300ms ease, box-shadow 300ms ease;
+}
+
+.navbar-container.scrolled {
+    padding-top: 0;
+    background-color: rgba(18, 18, 18, 0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px 0 rgba(0, 0, 0, .35);
 }
 
 .navbar{
@@ -2783,7 +2792,7 @@ ul{
     font-size: 200px;
     font-weight: 400;
     line-height: 1em;
-    margin-bottom: -59px;
+    margin-bottom: -15px;
     text-transform: uppercase;
 }
 

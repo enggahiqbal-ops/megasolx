@@ -55,6 +55,14 @@ export const siteSettings = defineType({
       group: "general",
       initialValue: "/contact",
     }),
+    defineField({
+      name: "circleLogoText",
+      title: "Circle logo text",
+      description: "Text that runs around the rotating circle logo (Home core services + About).",
+      type: "string",
+      group: "general",
+      initialValue: "• MEGASOLX FILM AND VIDEO PRODUCTION STUDIO • BRINGING IDEAS TO LIFE ON SCREEN",
+    }),
 
     defineField({ name: "footerCopyright", title: "Copyright line", type: "string", group: "footer" }),
     defineField({
@@ -62,7 +70,7 @@ export const siteSettings = defineType({
       title: "Footer column 1 heading",
       type: "string",
       group: "footer",
-      description: 'e.g. "Montra - Film & Video Production"',
+      description: 'e.g. "Megasolx - Film & Video Production"',
     }),
     defineField({
       name: "newsletter",
