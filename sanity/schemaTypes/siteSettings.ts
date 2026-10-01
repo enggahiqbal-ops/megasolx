@@ -104,6 +104,37 @@ export const siteSettings = defineType({
       ],
     }),
     defineField({
+      name: "floatingWidgets",
+      title: "Floating chat widgets",
+      description: "WhatsApp and Fiverr buttons pinned to the bottom-right of every page. Leave a field empty to hide that button.",
+      type: "object",
+      group: "contact",
+      fields: [
+        {
+          name: "whatsappNumber",
+          title: "WhatsApp number",
+          description: "International format with country code, e.g. +923001234567",
+          type: "string",
+          validation: (r: any) =>
+            r.custom((v: string | undefined) =>
+              !v || /^\+?[0-9\s-]{7,20}$/.test(v) ? true : "Use digits with country code, e.g. +923001234567",
+            ),
+        },
+        {
+          name: "whatsappMessage",
+          title: "WhatsApp pre-filled message",
+          type: "string",
+          initialValue: "Hi! I'd like to discuss a project.",
+        },
+        {
+          name: "fiverrUrl",
+          title: "Fiverr profile / gig link",
+          type: "url",
+          validation: (r: any) => r.uri({ scheme: ["http", "https"] }),
+        },
+      ],
+    }),
+    defineField({
       name: "social",
       type: "object",
       group: "contact",

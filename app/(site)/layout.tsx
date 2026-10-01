@@ -3,6 +3,7 @@ import { VisualEditing } from "next-sanity/visual-editing";
 
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
+import FloatingWidgets from "@/components/FloatingWidgets/FloatingWidgets";
 import DisableDraftMode from "@/components/DraftMode/DisableDraftMode";
 import { sanityFetch, SanityLive } from "@/sanity/lib/live";
 import { SETTINGS_QUERY } from "@/sanity/lib/queries";
@@ -23,6 +24,7 @@ export default async function SiteLayout({
       <Header settings={settings} />
       {children}
       <Footer settings={settings} />
+      <FloatingWidgets settings={settings} />
       <SanityLive />
       {isDraft && (
         <>

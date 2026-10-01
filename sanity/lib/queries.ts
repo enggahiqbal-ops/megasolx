@@ -18,6 +18,7 @@ export const SETTINGS_QUERY = defineQuery(`
     nav[]{ label, href },
     email,
     contact,
+    floatingWidgets,
     social,
     ctaBanner,
     trustSection,
