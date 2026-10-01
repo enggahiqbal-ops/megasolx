@@ -411,6 +411,11 @@ export type SiteSettings = {
     address?: string;
     mapEmbedUrl?: string;
   };
+  floatingWidgets?: {
+    whatsappNumber?: string;
+    whatsappMessage?: string;
+    fiverrUrl?: string;
+  };
   social?: {
     instagram?: string;
     facebook?: string;
@@ -572,7 +577,7 @@ export type AllSanitySchemaTypes =
 
 // Source: sanity/lib/queries.ts
 // Variable: SETTINGS_QUERY
-// Query: *[_type == "siteSettings"][0]{    name,    tagline,    description,    url,    "logo": logo.asset->url,    ctaLabel,    ctaHref,    circleLogoText,    footerCopyright,    footerHeading,    newsletter,    nav[]{ label, href },    email,    contact,    social,    ctaBanner,    trustSection,    trustStat,    highlightCta  }
+// Query: *[_type == "siteSettings"][0]{    name,    tagline,    description,    url,    "logo": logo.asset->url,    ctaLabel,    ctaHref,    circleLogoText,    footerCopyright,    footerHeading,    newsletter,    nav[]{ label, href },    email,    contact,    floatingWidgets,    social,    ctaBanner,    trustSection,    trustStat,    highlightCta  }
 export type SETTINGS_QUERY_RESULT = {
   name: string;
   tagline: string;
@@ -598,6 +603,11 @@ export type SETTINGS_QUERY_RESULT = {
     businessHours?: string;
     address?: string;
     mapEmbedUrl?: string;
+  } | null;
+  floatingWidgets: {
+    whatsappNumber?: string;
+    whatsappMessage?: string;
+    fiverrUrl?: string;
   } | null;
   social: {
     instagram?: string;
@@ -1060,7 +1070,7 @@ export type ARTICLE_SLUGS_QUERY_RESULT = Array<{
 // Query TypeMap
 declare global {
   interface SanityQueries {
-    '\n  *[_type == "siteSettings"][0]{\n    name,\n    tagline,\n    description,\n    url,\n    "logo": logo.asset->url,\n    ctaLabel,\n    ctaHref,\n    circleLogoText,\n    footerCopyright,\n    footerHeading,\n    newsletter,\n    nav[]{ label, href },\n    email,\n    contact,\n    social,\n    ctaBanner,\n    trustSection,\n    trustStat,\n    highlightCta\n  }\n': SETTINGS_QUERY_RESULT;
+    '\n  *[_type == "siteSettings"][0]{\n    name,\n    tagline,\n    description,\n    url,\n    "logo": logo.asset->url,\n    ctaLabel,\n    ctaHref,\n    circleLogoText,\n    footerCopyright,\n    footerHeading,\n    newsletter,\n    nav[]{ label, href },\n    email,\n    contact,\n    floatingWidgets,\n    social,\n    ctaBanner,\n    trustSection,\n    trustStat,\n    highlightCta\n  }\n': SETTINGS_QUERY_RESULT;
     '\n  *[_type == "homePage"][0]{\n    hero,\n    coreServices{\n      ...,\n      "image": image.asset->url,\n      "imageAlt": image.alt\n    }\n  }\n': HOME_PAGE_QUERY_RESULT;
     '\n  *[_type == "aboutPage"][0]{\n    tagline,\n    heroStatement,\n    secondaryStatement,\n    statsHeading,\n    stats\n  }\n': ABOUT_PAGE_QUERY_RESULT;
     '\n  *[_type == "contactPage"][0]{\n    heading,\n    body,\n    faqs\n  }\n': CONTACT_PAGE_QUERY_RESULT;
